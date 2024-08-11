@@ -6,9 +6,7 @@
 
 ## Integrate with editors
 
-Enhance your Nx experience by installing [Nx Console](https://nx.dev/nx-console) for your favorite editor. Nx Console
-provides an interactive UI to view your projects, run tasks, generate code, and more! Available for VSCode, IntelliJ and
-comes with a LSP for Vim users.
+Enhance your Nx experience by installing [Nx Console](https://nx.dev/nx-console) for your favorite editor. Nx Console provides an interactive UI to view your projects, run tasks, generate code, and more! Available for VSCode, IntelliJ and comes with a LSP for Vim users.
 
 ## Nx plugins and code generators
 
@@ -64,8 +62,7 @@ Nx comes with local caching already built-in (check your `nx.json`). On CI you m
 
 ## Explore the project graph
 
-Run `npx nx graph` to show the graph of the workspace.
-It will show tasks that you can run with Nx.
+Run `npx nx graph` to show the graph of the workspace. It will show tasks that you can run with Nx.
 
 - [Learn more about Exploring the Project Graph](https://nx.dev/core-features/explore-graph)
 

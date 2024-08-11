@@ -1,0 +1,15 @@
+module.exports = {
+  printWidth: 160,
+  tabWidth: 2,
+  useTabs: false,
+  semi: true,
+  singleQuote: true,
+  trailingComma: 'es5',
+  bracketSpacing: true,
+  bracketSameLine: true,
+  jsxBracketSameLine: true,
+  singleAttributePerLine: true,
+  arrowParens: 'avoid',
+  proseWrap: 'never',
+  plugins: ['prettier-plugin-organize-imports'],
+};
