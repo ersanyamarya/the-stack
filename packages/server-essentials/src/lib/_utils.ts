@@ -10,7 +10,7 @@ export const mockLogger: Logger = {
 
 export const mockErrorCallback = vi.fn((error: Error) => {
   // if (error instanceof Error) console.error(error.toString());
-  console.error('--------------------> Error <--------------------');
+  console.error('--------------------> Mock Error <--------------------');
 });
 
 export const serverConfigurations: ServerEssentialsOptions = {
