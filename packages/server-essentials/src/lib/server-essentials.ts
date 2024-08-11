@@ -1,4 +1,8 @@
+import cors from '@koa/cors';
 import Koa, { Context } from 'koa';
+
+import { bodyParser } from '@koa/bodyparser';
+
 export type Logger = {
   info: (...args: unknown[]) => void;
   log: (...args: unknown[]) => void;
@@ -17,7 +21,7 @@ declare module 'koa' {
 
 export type ServerEssentialsOptions = {
   logger: Logger;
-  errorCallback: (error: unknown, ctx: Context) => void;
+  errorCallback: (error: any, ctx: Context) => void;
   serviceName: string;
   serviceVersion: string;
 };
@@ -36,6 +40,16 @@ export async function createServerEssentials({ logger, errorCallback, serviceNam
       errorCallback(error, ctx);
     }
   });
+  app.use(cors());
+
+  app.use(
+    bodyParser({
+      encoding: 'utf-8',
+      enableTypes: ['json', 'form', 'text', 'xml'],
+      formLimit: '56kb',
+      onError: errorCallback,
+    })
+  );
 
   return app;
 }

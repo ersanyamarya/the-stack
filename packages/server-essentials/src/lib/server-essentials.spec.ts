@@ -1,29 +1,11 @@
 import Koa from 'koa';
-import supertest from 'supertest';
-import { createServerEssentials, Logger, ServerEssentialsOptions } from './server-essentials';
-const mockLogger: Logger = {
-  info: vi.fn(),
-  log: vi.fn(),
-  error: vi.fn(),
-  debug: vi.fn(),
-  warn: vi.fn(),
-};
-
-const mockErrorCallback = vi.fn((error: unknown) => {
-  if (error instanceof Error) console.error(error.toString());
-});
-
-const serverConfigurations: ServerEssentialsOptions = {
-  logger: mockLogger,
-  errorCallback: mockErrorCallback,
-  serviceName: 'test-service',
-  serviceVersion: '1.0.0',
-};
+import request from 'supertest';
+import { appInstance, mockErrorCallback, mockLogger } from './_utils';
 
 let testServer: Koa;
 describe('createServerEssentials', () => {
   beforeAll(async () => {
-    testServer = await createServerEssentials(serverConfigurations);
+    testServer = await appInstance;
   });
 
   it('should be defined and an instance of Koa', () => {
@@ -37,7 +19,7 @@ describe('createServerEssentials', () => {
       mockDataFunction(ctx.logger, ctx.serviceName, ctx.serviceVersion);
       await next();
     });
-    await supertest(testServer.callback()).get('/');
+    await request(testServer.callback()).get('/');
 
     expect(mockDataFunction).toHaveBeenCalledWith(mockLogger, 'test-service', '1.0.0');
   });
@@ -53,7 +35,7 @@ describe('createServerEssentials', () => {
       throw error;
     });
 
-    await supertest(testServer.callback()).get('/');
+    await request(testServer.callback()).get('/');
     expect(mockErrorCallback).toHaveBeenCalledWith(error, expect.any(Object));
   });
 });
