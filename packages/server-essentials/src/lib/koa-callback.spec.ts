@@ -70,7 +70,7 @@ describe('koaCallback Error Handling', () => {
       expect(mockErrorCallback).toHaveBeenCalled();
       const errorArg = mockErrorCallback.mock.calls[0][0];
       expect(errorArg).toBeInstanceOf(RequestValidationError);
-      expect(errorArg.message).toBe('Invalid query parameters');
+      if (errorArg instanceof RequestValidationError) expect(errorArg.message).toBe('Invalid query parameters');
     });
 
     it('should invoke mockErrorCallback for invalid boolean in query parameters', async () => {
@@ -83,7 +83,7 @@ describe('koaCallback Error Handling', () => {
       expect(mockErrorCallback).toHaveBeenCalled();
       const errorArg = mockErrorCallback.mock.calls[0][0];
       expect(errorArg).toBeInstanceOf(RequestValidationError);
-      expect(errorArg.message).toBe('Invalid query parameters');
+      if (errorArg instanceof RequestValidationError) expect(errorArg.message).toBe('Invalid query parameters');
     });
   });
   describe('Body Parameter Validation', () => {
@@ -97,7 +97,7 @@ describe('koaCallback Error Handling', () => {
       expect(mockErrorCallback).toHaveBeenCalled();
       const errorArg = mockErrorCallback.mock.calls[0][0];
       expect(errorArg).toBeInstanceOf(RequestValidationError);
-      expect(errorArg.message).toBe('Invalid request body');
+      if (errorArg instanceof RequestValidationError) expect(errorArg.message).toBe('Invalid request body');
     });
 
     it('should invoke mockErrorCallback for invalid body parameter type', async () => {
@@ -110,7 +110,7 @@ describe('koaCallback Error Handling', () => {
       expect(mockErrorCallback).toHaveBeenCalled();
       const errorArg = mockErrorCallback.mock.calls[0][0];
       expect(errorArg).toBeInstanceOf(RequestValidationError);
-      expect(errorArg.message).toBe('Invalid request body');
+      if (errorArg instanceof RequestValidationError) expect(errorArg.message).toBe('Invalid request body');
     });
 
     it('should invoke mockErrorCallback for body parameter below minimum', async () => {
@@ -123,7 +123,7 @@ describe('koaCallback Error Handling', () => {
       expect(mockErrorCallback).toHaveBeenCalled();
       const errorArg = mockErrorCallback.mock.calls[0][0];
       expect(errorArg).toBeInstanceOf(RequestValidationError);
-      expect(errorArg.message).toBe('Invalid request body');
+      if (errorArg instanceof RequestValidationError) expect(errorArg.message).toBe('Invalid request body');
     });
 
     it('should handle valid body parameters', async () => {
@@ -148,7 +148,7 @@ describe('koaCallback Error Handling', () => {
       expect(mockErrorCallback).toHaveBeenCalled();
       const errorArg = mockErrorCallback.mock.calls[0][0];
       expect(errorArg).toBeInstanceOf(RequestValidationError);
-      expect(errorArg.message).toBe('Invalid route parameters');
+      if (errorArg instanceof RequestValidationError) expect(errorArg.message).toBe('Invalid route parameters');
     });
 
     it('should handle valid route parameters', async () => {

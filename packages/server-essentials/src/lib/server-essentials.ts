@@ -21,7 +21,7 @@ declare module 'koa' {
 
 export type ServerEssentialsOptions = {
   logger: Logger;
-  errorCallback: (error: any, ctx: Context) => void;
+  errorCallback: (error: unknown, ctx: Context) => void;
   serviceName: string;
   serviceVersion: string;
 };

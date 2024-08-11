@@ -15,18 +15,18 @@ export class RequestValidationError extends Error {
 }
 
 // Define a type that includes the body only for POST and PUT methods
-type BaseControllerData<Query, Params, Body> =
+export type BaseControllerData<Query, Params, Body> =
   | { method: 'GET' | 'DELETE'; query: Query; params: Params; path: string }
   | { method: 'POST' | 'PUT'; query: Query; params: Params; path: string; body: Body };
 
-type ControllerResponse = {
+export type ControllerResponse = {
   status: StatusCodes;
   body: unknown;
 };
 
-type Controller<Query, Params, Body> = (data: BaseControllerData<Query, Params, Body>) => Promise<ControllerResponse>;
+export type Controller<Query, Params, Body> = (data: BaseControllerData<Query, Params, Body>) => Promise<ControllerResponse>;
 
-type ValidationSchemas<Query extends ZodTypeAny, Params extends ZodTypeAny, Body extends ZodTypeAny> = {
+export type ValidationSchemas<Query extends ZodTypeAny, Params extends ZodTypeAny, Body extends ZodTypeAny> = {
   querySchema?: Query;
   paramsSchema?: Params;
   bodySchema?: Body;

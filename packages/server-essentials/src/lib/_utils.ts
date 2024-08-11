@@ -8,7 +8,7 @@ export const mockLogger: Logger = {
   warn: vi.fn(),
 };
 
-export const mockErrorCallback = vi.fn((error: Error) => {
+export const mockErrorCallback = vi.fn((error: unknown) => {
   // if (error instanceof Error) console.error(error.toString());
   console.error('--------------------> Mock Error <--------------------');
 });
