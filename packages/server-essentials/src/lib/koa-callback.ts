@@ -41,7 +41,7 @@ export type ValidationSchemas<Query extends ZodTypeAny, Params extends ZodTypeAn
   bodySchema?: Body;
 };
 
-export default function koaCallback<Query extends ZodTypeAny, Params extends ZodTypeAny, Body extends ZodTypeAny>(
+export function koaCallback<Query extends ZodTypeAny, Params extends ZodTypeAny, Body extends ZodTypeAny>(
   controller: Controller<ZodInfer<Query>, ZodInfer<Params>, ZodInfer<Body>>,
   schemas: ValidationSchemas<Query, Params, Body> = {}
 ) {

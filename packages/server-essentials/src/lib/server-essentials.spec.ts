@@ -1,10 +1,11 @@
 import Koa from 'koa';
 import request from 'supertest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { appInstance, mockErrorCallback, mockLogger } from './_utils';
 
 let testServer: Koa;
 
-describe('createServerEssentials', () => {
+describe('getKoaServer', () => {
   beforeAll(async () => {
     testServer = await appInstance;
   });

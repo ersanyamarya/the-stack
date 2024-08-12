@@ -4,7 +4,7 @@ import request from 'supertest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 import { appInstance, mockErrorCallback } from './_utils';
-import koaCallback, { RequestValidationError } from './koa-callback';
+import { koaCallback, RequestValidationError } from './koa-callback';
 
 // Define Zod schemas for testing
 const querySchema = z.object({

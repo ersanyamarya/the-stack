@@ -1,5 +1,5 @@
-import { createServerEssentials, Logger, ServerEssentialsOptions } from './server-essentials';
-
+import { vi } from 'vitest';
+import { getKoaServer, Logger, ServerEssentialsOptions } from './server-essentials';
 export const mockLogger: Logger = {
   info: vi.fn(),
   log: vi.fn(),
@@ -20,4 +20,4 @@ export const serverConfigurations: ServerEssentialsOptions = {
   serviceVersion: '1.0.0',
 };
 
-export const appInstance = createServerEssentials(serverConfigurations);
+export const appInstance = getKoaServer(serverConfigurations);

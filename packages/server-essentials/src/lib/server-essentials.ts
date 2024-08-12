@@ -2,6 +2,7 @@ import cors from '@koa/cors';
 import Koa, { Context } from 'koa';
 
 import { bodyParser } from '@koa/bodyparser';
+import helmet from 'koa-helmet';
 
 export type Logger = {
   info: (...args: unknown[]) => void;
@@ -18,17 +19,19 @@ declare module 'koa' {
     serviceVersion: string;
   }
 }
+export type ErrorCallback = (error: unknown, ctx: Context) => void;
 
 export type ServerEssentialsOptions = {
   logger: Logger;
-  errorCallback: (error: unknown, ctx: Context) => void;
+  errorCallback: ErrorCallback;
   serviceName: string;
   serviceVersion: string;
 };
 
-export async function createServerEssentials({ logger, errorCallback, serviceName, serviceVersion }: ServerEssentialsOptions) {
+export async function getKoaServer({ logger, errorCallback, serviceName, serviceVersion }: ServerEssentialsOptions) {
   logger.info('--------------------> Starting server <--------------------');
   const app = new Koa();
+  app.use(helmet());
   app.use(async (ctx, next) => {
     try {
       ctx.logger = logger;
