@@ -12,15 +12,11 @@ const querySchema = z.object({
   page: z
     .string()
     .transform(val => parseInt(val, 10))
-    .refine(val => !isNaN(val), {
-      message: 'Invalid number',
-    }),
+    .refine(val => !isNaN(val), { message: 'Invalid number' }),
   active: z
     .string()
     .transform(val => (val === 'true' || val === 'True' ? true : val))
-    .refine(val => typeof val === 'boolean', {
-      message: 'Invalid boolean',
-    }),
+    .refine(val => typeof val === 'boolean', { message: 'Invalid boolean' }),
 });
 
 const paramsSchema = z.object({
@@ -33,10 +29,10 @@ const bodySchema = z.object({
 });
 
 // Mock controller for testing
-const mockController = async ({ query, params, method, path, body }: any) => {
+const mockController = async ({ query, params, method, path, body, headers }: any) => {
   return {
     status: 200,
-    body: { query, params, method, path, body },
+    body: { query, params, method, path, body, headers },
   };
 };
 
@@ -46,7 +42,7 @@ describe('koaCallback Error Handling', () => {
   beforeEach(async () => {
     app = await appInstance;
     app.on('error', mockErrorCallback);
-    vi.clearAllMocks(); // Clear mock calls before each test
+    vi.clearAllMocks();
   });
 
   describe('Query Parameter Validation', () => {
@@ -66,11 +62,11 @@ describe('koaCallback Error Handling', () => {
       app.use(router.routes());
 
       await request(app.callback()).get('/test?search=valid&page=not-a-number&active=True');
-
       expect(mockErrorCallback).toHaveBeenCalled();
+
       const errorArg = mockErrorCallback.mock.calls[0][0];
       expect(errorArg).toBeInstanceOf(RequestValidationError);
-      if (errorArg instanceof RequestValidationError) expect(errorArg.message).toBe('Invalid query parameters');
+      if (errorArg instanceof RequestValidationError) expect(errorArg.status).toBe('INVALID_QUERY_PARAMS');
     });
 
     it('should invoke mockErrorCallback for invalid boolean in query parameters', async () => {
@@ -79,13 +75,14 @@ describe('koaCallback Error Handling', () => {
       app.use(router.routes());
 
       await request(app.callback()).get('/test?search=valid&page=1&active=not-a-boolean');
-
       expect(mockErrorCallback).toHaveBeenCalled();
+
       const errorArg = mockErrorCallback.mock.calls[0][0];
       expect(errorArg).toBeInstanceOf(RequestValidationError);
-      if (errorArg instanceof RequestValidationError) expect(errorArg.message).toBe('Invalid query parameters');
+      if (errorArg instanceof RequestValidationError) expect(errorArg.status).toBe('INVALID_QUERY_PARAMS');
     });
   });
+
   describe('Body Parameter Validation', () => {
     it('should invoke mockErrorCallback for missing body parameters', async () => {
       const router = new Router();
@@ -93,11 +90,11 @@ describe('koaCallback Error Handling', () => {
       app.use(router.routes());
 
       await request(app.callback()).post('/test/123e4567-e89b-12d3-a456-426614174000').send({ name: 'John' }); // Missing age
-
       expect(mockErrorCallback).toHaveBeenCalled();
+
       const errorArg = mockErrorCallback.mock.calls[0][0];
       expect(errorArg).toBeInstanceOf(RequestValidationError);
-      if (errorArg instanceof RequestValidationError) expect(errorArg.message).toBe('Invalid request body');
+      if (errorArg instanceof RequestValidationError) expect(errorArg.status).toBe('INVALID_REQUEST_BODY');
     });
 
     it('should invoke mockErrorCallback for invalid body parameter type', async () => {
@@ -106,11 +103,11 @@ describe('koaCallback Error Handling', () => {
       app.use(router.routes());
 
       await request(app.callback()).post('/test/123e4567-e89b-12d3-a456-426614174000').send({ name: 'John', age: 'thirty' }); // Age should be a number
-
       expect(mockErrorCallback).toHaveBeenCalled();
+
       const errorArg = mockErrorCallback.mock.calls[0][0];
       expect(errorArg).toBeInstanceOf(RequestValidationError);
-      if (errorArg instanceof RequestValidationError) expect(errorArg.message).toBe('Invalid request body');
+      if (errorArg instanceof RequestValidationError) expect(errorArg.status).toBe('INVALID_REQUEST_BODY');
     });
 
     it('should invoke mockErrorCallback for body parameter below minimum', async () => {
@@ -119,11 +116,11 @@ describe('koaCallback Error Handling', () => {
       app.use(router.routes());
 
       await request(app.callback()).post('/test/123e4567-e89b-12d3-a456-426614174000').send({ name: 'John', age: 30 });
-
       expect(mockErrorCallback).toHaveBeenCalled();
+
       const errorArg = mockErrorCallback.mock.calls[0][0];
       expect(errorArg).toBeInstanceOf(RequestValidationError);
-      if (errorArg instanceof RequestValidationError) expect(errorArg.message).toBe('Invalid request body');
+      if (errorArg instanceof RequestValidationError) expect(errorArg.status).toBe('INVALID_REQUEST_BODY');
     });
 
     it('should handle valid body parameters', async () => {
@@ -144,11 +141,11 @@ describe('koaCallback Error Handling', () => {
       app.use(router.routes());
 
       await request(app.callback()).post('/test/invalid-id').send({ name: 'John', age: 35 });
-
       expect(mockErrorCallback).toHaveBeenCalled();
+
       const errorArg = mockErrorCallback.mock.calls[0][0];
       expect(errorArg).toBeInstanceOf(RequestValidationError);
-      if (errorArg instanceof RequestValidationError) expect(errorArg.message).toBe('Invalid route parameters');
+      if (errorArg instanceof RequestValidationError) expect(errorArg.status).toBe('INVALID_ROUTE_PARAMS');
     });
 
     it('should handle valid route parameters', async () => {
