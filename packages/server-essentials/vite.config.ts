@@ -57,4 +57,8 @@ export default defineConfig({
       provider: 'v8',
     },
   },
+
+  optimizeDeps: {
+    include: ['@nx/koa', '@nx/koa-router', '@nx/zod'],
+  },
 });
