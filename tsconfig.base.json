@@ -16,7 +16,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@local/server-essentials": ["packages/server-essentials/src/index.ts"]
+      "@local/server-essentials": ["packages/server-essentials/src/index.ts"],
+      "@local/utils": ["packages/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -47,7 +47,7 @@ export function koaCallback<Query extends ZodTypeAny, Params extends ZodTypeAny,
 ) {
   return async (ctx: Context) => {
     let query = getQuery(ctx.query);
-    const params = ctx['params'] as Record<string, any>;
+    const params = ctx['params'] as Record<string, string>;
     const path = ctx.path;
     const method = ctx.method as 'GET' | 'POST' | 'PUT' | 'DELETE';
     const headers = ctx.headers;
