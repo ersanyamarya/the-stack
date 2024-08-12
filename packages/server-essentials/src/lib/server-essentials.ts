@@ -4,14 +4,6 @@ import Koa, { Context } from 'koa';
 import { bodyParser } from '@koa/bodyparser';
 import helmet from 'koa-helmet';
 
-export type Logger = {
-  info: (...args: unknown[]) => void;
-  log: (...args: unknown[]) => void;
-  error: (...args: unknown[]) => void;
-  debug: (...args: unknown[]) => void;
-  warn: (...args: unknown[]) => void;
-};
-
 declare module 'koa' {
   interface BaseContext {
     logger: Logger;
@@ -19,6 +11,7 @@ declare module 'koa' {
     serviceVersion: string;
   }
 }
+
 export type ErrorCallback = (error: unknown, ctx: Context) => void;
 
 export type ServerEssentialsOptions = {
