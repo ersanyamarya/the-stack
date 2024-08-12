@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-object-injection */
 import { IncomingMessage, Server, ServerResponse } from 'http';
 import { Socket as NetSocket } from 'net';
 
@@ -24,7 +25,7 @@ interface Logger {
  * @param {ServerResponse} response - The response object.
  * @param {Logger} logger - The logger instance.
  */
-const onRequest = (request: IncomingMessage, response: ServerResponse, logger: Logger): void => {
+const onRequest = (request: IncomingMessage, response: ServerResponse): void => {
   const socket = request.socket as Socket;
   socket.isIdle = false;
 

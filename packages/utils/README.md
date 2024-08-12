@@ -3,6 +3,7 @@
 This library was generated with [Nx](https://nx.dev).
 
 ## Building
+
 Here's a README for the `loadConfigFromEnv` function, which provides an overview of its purpose, usage, and examples:
 
 ---
@@ -17,7 +18,6 @@ The `loadConfigFromEnv` function is a utility designed to load and validate conf
 - **Environment Variable Mapping**: Supports mapping between configuration keys and environment variable names.
 - **Default Values**: Allows default values to be specified directly within Zod schemas.
 - **Validation**: Ensures all configuration values meet the specified validation criteria.
-
 
 ## Usage
 
@@ -75,10 +75,10 @@ const envMapping = {
 // Load the configuration
 const config = loadConfigFromEnv(exampleSchema, envMapping);
 
-console.log(config.nodeEnv);  // Outputs the value of NODE_ENV or 'development'
-console.log(config.server.port);  // Outputs the value of SERVICE_1_PORT or 3000
-console.log(config.server.host);  // Outputs the value of SERVICE_1_HOST or 'localhost'
-console.log(config.telemetryEnabled);  // Outputs the value of TELEMETRY_ENABLED or false
+console.log(config.nodeEnv); // Outputs the value of NODE_ENV or 'development'
+console.log(config.server.port); // Outputs the value of SERVICE_1_PORT or 3000
+console.log(config.server.host); // Outputs the value of SERVICE_1_HOST or 'localhost'
+console.log(config.telemetryEnabled); // Outputs the value of TELEMETRY_ENABLED or false
 ```
 
 ### Error Handling

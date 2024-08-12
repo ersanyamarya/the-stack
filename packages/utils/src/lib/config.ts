@@ -1,7 +1,11 @@
+/* eslint-disable security/detect-object-injection */
 import { z, ZodObject, ZodRawShape } from 'zod';
 
 // Function to load configuration using a schema and a mapping
-export function loadConfigFromEnv<T extends ZodRawShape>(schema: ZodObject<T>, envMapping: Record<string, string>): z.infer<ZodObject<T>> {
+export function loadConfigFromEnv<T extends ZodRawShape>(
+  schema: ZodObject<T>,
+  envMapping: Record<string, string>
+): z.infer<ZodObject<T>> {
   const config: Record<string, unknown> = {};
 
   for (const key in schema.shape) {

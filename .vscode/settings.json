@@ -1,3 +1,8 @@
 {
-  "cSpell.words": ["bodyparser"]
+  "cSpell.words": ["bodyparser"],
+
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.requireConfig": true,
+  "prettier.configPath": ".prettierrc.js"
 }
