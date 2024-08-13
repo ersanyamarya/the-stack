@@ -44,9 +44,10 @@ export default defineConfig({
     globals: false,
     environment: 'node',
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-
     reporters: ['default'],
     coverage: {
+      enabled: true,
+      exclude: ['**/*.d.ts', '**/*.spec.*', 'src/index.ts'],
       reportsDirectory: '../../coverage/packages/utils',
       provider: 'v8',
     },
