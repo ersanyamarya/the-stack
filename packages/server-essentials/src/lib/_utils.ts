@@ -1,6 +1,12 @@
 import { Context } from 'koa';
 import { vi } from 'vitest';
 import { getKoaServer, ServerEssentialsOptions } from './server-essentials';
+export type Logger = {
+  info: (message: string, ...optionalParams: unknown[]) => void;
+  warn: (message: string, ...optionalParams: unknown[]) => void;
+  error: (message: string, ...optionalParams: unknown[]) => void;
+  debug: (message: string, ...optionalParams: unknown[]) => void;
+};
 
 export const mockLogger: Logger = {
   info: vi.fn(),

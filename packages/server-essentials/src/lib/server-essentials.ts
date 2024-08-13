@@ -3,6 +3,7 @@ import Koa, { Context } from 'koa';
 
 import { bodyParser } from '@koa/bodyparser';
 import helmet from 'koa-helmet';
+import { Logger } from './_utils';
 
 declare module 'koa' {
   interface BaseContext {

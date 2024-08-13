@@ -13,7 +13,7 @@ export function loadConfigFromEnv<T extends ZodRawShape>(
     const envValue = process.env[envKey];
     const schemaType = schema.shape[key];
 
-    if (schemaType instanceof ZodObject) {
+    if (isZodObject(schemaType)) {
       // Recursively handle nested configurations
       config[key] = loadConfigFromEnv(schemaType, envMapping);
     } else {
@@ -25,4 +25,20 @@ export function loadConfigFromEnv<T extends ZodRawShape>(
   }
 
   return config as z.infer<ZodObject<T>>;
+}
+
+export const configNumberSchema = z
+  .string()
+  .regex(/^\d+$/, { message: 'Invalid number' })
+  .transform(val => parseInt(val, 10))
+  .refine(val => !isNaN(val), { message: 'Invalid number' });
+
+export const configBooleanSchema = z
+  .string()
+  .transform(val => (val === 'true' || val === 'True' ? true : val))
+  .refine(val => typeof val === 'boolean', { message: 'Invalid boolean' });
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isZodObject(schemaType: any): schemaType is ZodObject<any> {
+  return !!schemaType._def.shape;
 }

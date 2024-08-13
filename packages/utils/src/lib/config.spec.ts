@@ -1,22 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { z } from 'zod';
-import { loadConfigFromEnv } from './config';
+import { configBooleanSchema, configNumberSchema, loadConfigFromEnv } from './config';
 
 // Define a schema with Zod
 const exampleSchema = z.object({
   nodeEnv: z.string().default('development'),
   server: z.object({
-    port: z
-      .string()
-      .regex(/^\d+$/, { message: 'Invalid number' })
-      .transform(val => parseInt(val, 10))
-      .refine(val => !isNaN(val), { message: 'Invalid number' }),
+    port: configNumberSchema,
     host: z.string().default('localhost'),
   }),
-  telemetryEnabled: z
-    .string()
-    .transform(val => (val === 'true' || val === 'True' ? true : val))
-    .refine(val => typeof val === 'boolean', { message: 'Invalid boolean' }),
+  telemetryEnabled: configBooleanSchema,
 });
 
 // Environment variable mapping
