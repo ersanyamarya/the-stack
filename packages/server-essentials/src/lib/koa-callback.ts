@@ -24,9 +24,10 @@ type CommonControllerData<Query, Params> = {
   headers: IncomingHttpHeaders;
 };
 
-export type BaseControllerData<Query, Params, Body> =
-  | (CommonControllerData<Query, Params> & { method: 'GET' | 'DELETE' })
-  | (CommonControllerData<Query, Params> & { method: 'POST' | 'PUT'; body: Body });
+export type BaseControllerData<Query, Params, Body> = CommonControllerData<Query, Params> & {
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  body?: Body;
+};
 
 export type ControllerResponse = {
   status: StatusCodes;
@@ -46,7 +47,7 @@ export type ValidationSchemas<Query extends ZodTypeAny, Params extends ZodTypeAn
 export function koaCallback<Query extends ZodTypeAny, Params extends ZodTypeAny, Body extends ZodTypeAny>(
   controller: Controller<ZodInfer<Query>, ZodInfer<Params>, ZodInfer<Body>>,
   schemas: ValidationSchemas<Query, Params, Body> = {}
-) {
+): (ctx: Context) => Promise<void> {
   return async (ctx: Context) => {
     let query = getQuery(ctx.query);
     const params = ctx['params'] as Record<string, string>;
@@ -80,7 +81,7 @@ export function koaCallback<Query extends ZodTypeAny, Params extends ZodTypeAny,
       }
     }
 
-    const result = await controller({ query, params, method, path, body, headers } as BaseControllerData<
+    const result = await controller({ query, params, body, method, path, headers } as BaseControllerData<
       ZodInfer<Query>,
       ZodInfer<Params>,
       ZodInfer<Body>
@@ -90,8 +91,8 @@ export function koaCallback<Query extends ZodTypeAny, Params extends ZodTypeAny,
   };
 }
 
-function getQuery(query: Record<string, unknown>): Record<string, unknown> {
+function getQuery(query: Record<string, string | string[] | undefined>): Record<string, string> {
   return Object.fromEntries(
     Object.entries(query).map(([key, value]) => [key, Array.isArray(value) ? value[0] : String(value)])
-  ) as Record<string, unknown>;
+  ) as Record<string, string>;
 }

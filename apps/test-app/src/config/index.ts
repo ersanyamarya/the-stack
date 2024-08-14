@@ -1,4 +1,4 @@
-import { configNumberSchema, loadConfigFromEnv } from '@local/utils';
+import { configNumberSchema, configStringArraySchema, loadConfigFromEnv } from '@local/utils';
 import { z } from 'zod';
 
 const configSchema = z.object({
@@ -10,25 +10,34 @@ const configSchema = z.object({
     port: configNumberSchema,
     url: z.string(),
   }),
+  features: configStringArraySchema,
+
+  nodeEnv: z.string(),
 });
 
-type Config = z.infer<typeof configSchema>;
-
-const eventMapping = {
-  name: 'TEST_SERVICE_NAME',
-  version: 'TEST_SERVICE_VERSION',
-  port: 'TEST_SERVICE_PORT',
-  url: 'TEST_SERVICE_URL',
+const eventMapping: Record<keyof z.infer<typeof configSchema>, unknown> = {
+  service: {
+    name: 'TEST_SERVICE_NAME',
+    version: 'TEST_SERVICE_VERSION',
+  },
+  server: {
+    port: 'TEST_SERVICE_PORT',
+    url: 'TEST_SERVICE_URL',
+  },
+  nodeEnv: 'NODE_ENV',
+  features: 'FEATURES',
 };
 
-export let config: Config;
+type AppConfigType = z.infer<typeof configSchema> & {
+  isProduction: boolean;
+};
 
-try {
-  console.log('Loading configuration...');
-  config = loadConfigFromEnv(configSchema, eventMapping);
-} catch (error) {
-  console.error(error.message);
-}
+export let config: AppConfigType;
+
+export const getConfig = (): void => {
+  const envConfig = loadConfigFromEnv(configSchema, eventMapping);
+  config = { ...envConfig, isProduction: ['production', 'prod'].includes(envConfig.nodeEnv) };
+};
 
 export function upTime(): string {
   const seconds = process.uptime();

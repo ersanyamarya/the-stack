@@ -1,86 +1,100 @@
 # utils
 
-This library was generated with [Nx](https://nx.dev).
+## 
+## README Section for `config.ts` and `config.spec.ts`
 
-## Building
+### Overview
 
-Here's a README for the `loadConfigFromEnv` function, which provides an overview of its purpose, usage, and examples:
+This project provides a configuration loader for Node.js applications that reads environment variables and validates them using the **Zod** library. The configuration ensures type safety by transforming string-based environment variables into more useful data types like numbers, booleans, and arrays.
 
----
+### Files
 
-# `loadConfigFromEnv`
+- **`config.ts`**: Implements the configuration loader and defines custom types for parsing environment variables.
+- **`config.spec.ts`**: Contains test cases to ensure the configuration loader functions correctly.
 
-The `loadConfigFromEnv` function is a utility designed to load and validate configuration settings from environment variables using Zod schemas. It provides a type-safe way to manage application configurations, ensuring that all values conform to specified types and constraints.
+### Key Features
 
-## Features
+- **Environment Variable Mapping**: Maps environment variables to configuration keys, supporting nested configurations.
+- **Type Safety with Zod**: Uses Zod schemas to enforce types and validate configuration values.
+- **Custom Schemas for Parsing**:
+  - **`configStringArraySchema`**: Parses comma-separated strings into arrays.
+  - **`configNumberSchema`**: Parses strings into numbers, validating numeric input.
+  - **`configBooleanSchema`**: Parses strings into booleans, recognizing "true"/"false" in various cases.
+- **Error Handling**: Provides descriptive error messages for invalid or missing configuration values.
 
-- **Type Safety**: Utilizes Zod schemas to enforce type constraints and provide type inference.
-- **Environment Variable Mapping**: Supports mapping between configuration keys and environment variable names.
-- **Default Values**: Allows default values to be specified directly within Zod schemas.
-- **Validation**: Ensures all configuration values meet the specified validation criteria.
+### Usage
 
-## Usage
+1. **Define a Configuration Schema**: Use Zod to define the expected structure and types of your configuration.
 
-### Function Signature
+   ```typescript
+   const configSchema = z.object({
+     service: z.object({
+       name: z.string(),
+       version: z.string(),
+     }),
+     server: z.object({
+       port: configNumberSchema,
+       url: z.string(),
+     }),
+     nodeEnv: z.string().default('development'),
+     features: configStringArraySchema.optional(),
+     isFeatureEnabled: configBooleanSchema.optional(),
+   });
+   ```
 
-```typescript
-function loadConfigFromEnv<T extends ZodRawShape>(
-  schema: ZodObject<T>,
-  envMapping: Record<string, string>
-): z.infer<ZodObject<T>>;
-```
+2. **Map Environment Variables**: Define a mapping between environment variables and configuration keys.
 
-### Parameters
+   ```typescript
+   const nestedEnvMapping = {
+     service: {
+       name: 'TEST_SERVICE_NAME',
+       version: 'TEST_SERVICE_VERSION',
+     },
+     server: {
+       port: 'TEST_SERVICE_PORT',
+       url: 'TEST_SERVICE_URL',
+     },
+     nodeEnv: 'NODE_ENV',
+     features: 'FEATURES',
+     isFeatureEnabled: 'IS_FEATURE_ENABLED',
+   };
+   ```
 
-- `schema`: A Zod object schema defining the structure, types, and default values for the configuration.
-- `envMapping`: An object mapping configuration keys to environment variable names.
+3. **Load Configuration**: Use the `loadConfigFromEnv` function to load and validate the configuration from the environment.
 
-### Returns
+   ```typescript
+   const config = loadConfigFromEnv(configSchema, nestedEnvMapping);
+   ```
 
-- A configuration object with values parsed and validated according to the provided Zod schema.
+### Custom Types
 
-### Example
+- **`configStringArraySchema`**: Converts a comma-separated string into an array of strings.
+- **`configNumberSchema`**: Converts a string to a number, ensuring the string is a valid numeric representation.
+- **`configBooleanSchema`**: Converts a string to a boolean, recognizing "true"/"false" in different cases.
 
-Here's an example of how to use the `loadConfigFromEnv` function:
+### Testing
 
-```typescript
-import { z } from 'zod';
-import { loadConfigFromEnv } from './path/to/your/file';
+The test suite in `config.spec.ts` uses Vitest to verify the configuration loader's behavior. It includes tests for:
 
-// Define a schema with Zod
-const exampleSchema = z.object({
-  nodeEnv: z.string().default('development'),
-  server: z.object({
-    port: z
-      .string()
-      .regex(/^\d+$/, { message: 'Invalid number' })
-      .transform(val => parseInt(val, 10))
-      .refine(val => !isNaN(val), { message: 'Invalid number' }),
-    host: z.string().default('localhost'),
-  }),
-  telemetryEnabled: z
-    .string()
-    .transform(val => (val === 'true' || val === 'True' ? true : val))
-    .refine(val => typeof val === 'boolean', { message: 'Invalid boolean' }),
-});
+- Valid and invalid environment variables.
+- Default values when environment variables are not set.
+- Handling of missing required variables.
+- Custom schema parsing for numbers, booleans, and string arrays.
 
-// Environment variable mapping
-const envMapping = {
-  nodeEnv: 'NODE_ENV',
-  port: 'SERVICE_1_PORT',
-  host: 'SERVICE_1_HOST',
-  telemetryEnabled: 'TELEMETRY_ENABLED',
-};
+Run the tests using the following command:
 
-// Load the configuration
-const config = loadConfigFromEnv(exampleSchema, envMapping);
-
-console.log(config.nodeEnv); // Outputs the value of NODE_ENV or 'development'
-console.log(config.server.port); // Outputs the value of SERVICE_1_PORT or 3000
-console.log(config.server.host); // Outputs the value of SERVICE_1_HOST or 'localhost'
-console.log(config.telemetryEnabled); // Outputs the value of TELEMETRY_ENABLED or false
+```bash
+vitest
 ```
 
 ### Error Handling
 
-If an environment variable does not meet the specified validation criteria, the function will throw an error. Ensure that all environment variables are correctly set and valid according to the schema.
+The loader throws descriptive errors if:
+
+- An environment variable has an invalid value.
+- A required environment variable is missing.
+- A value cannot be parsed according to the defined schema.
+
+### Conclusion
+
+This configuration loader is ideal for applications requiring robust configuration management with type safety and validation. By leveraging Zod, it ensures that configurations are both flexible and reliable, transforming string-based environment variables into more useful data types.
