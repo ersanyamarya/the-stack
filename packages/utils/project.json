@@ -14,6 +14,15 @@
         "tsConfig": "packages/utils/tsconfig.lib.json",
         "assets": ["packages/utils/*.md"]
       }
+    },
+    "test:watch": {
+      "executor": "@nrwl/vite:test",
+      "options": {
+        "main": "packages/utils/src/test-setup.ts",
+        "tsConfig": "packages/utils/tsconfig.spec.json",
+        "watch": true,
+        "coverage": false
+      }
     }
   }
 }

@@ -40,7 +40,7 @@ export default defineConfig({
   },
 
   test: {
-    watch: true,
+    watch: false,
     globals: false,
     environment: 'node',
     include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
