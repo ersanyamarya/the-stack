@@ -17,7 +17,8 @@
     "baseUrl": ".",
     "paths": {
       "@local/server-essentials": ["packages/server-essentials/src/index.ts"],
-      "@local/utils": ["packages/utils/src/index.ts"]
+      "@local/utils": ["packages/utils/src/index.ts"],
+      "@local/infra-types": ["packages/infra-types/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
