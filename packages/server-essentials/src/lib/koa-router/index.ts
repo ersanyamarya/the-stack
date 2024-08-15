@@ -1,6 +1,11 @@
 import Router from '@koa/router';
 import { HealthCheck } from '@local/infra-types';
+import { Controller } from '../koa-callback';
 export const router = new Router();
+
+export type AppRoute<Query, Params, Body> = {
+  [path: string]: Controller<Query, Params, Body>;
+};
 
 export type RootRouteOptions = {
   serviceName: string;

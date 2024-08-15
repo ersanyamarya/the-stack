@@ -9,17 +9,10 @@ export type HealthCheck = {
   status?: Status;
 };
 
-export type PluginEcosystem = {
-  logger: Logger;
-  healthCheck: HealthCheck;
-};
-
-type PluginConfig<T> = T;
-
 // Define the plugin interface with generics
-interface Plugin<T> {
+export interface Plugin<T extends Record<string, unknown>> {
   // Connect function that returns a function to get the health check
-  connect(config: PluginConfig<T>): () => {
+  connect(config: T): {
     name: string;
     healthCheck: () => HealthCheck;
   };
@@ -29,4 +22,4 @@ interface Plugin<T> {
 }
 
 // Define a factory function for creating plugins with a logger
-export type PluginFactory<T> = (logger: Logger) => Plugin<T>;
+export type PluginFactory<T extends Record<string, unknown>> = (logger: Logger) => Plugin<T>;

@@ -1,12 +1,5 @@
-import {
-  Controller,
-  ErrorCallback,
-  getKoaServer,
-  koaCallback,
-  RequestValidationError,
-  router,
-  setupRootRoute,
-} from '@local/server-essentials';
+import { HealthCheck, Plugin } from '@local/infra-types';
+import { Controller, ErrorCallback, getKoaServer, koaCallback, RequestValidationError, router, setupRootRoute } from '@local/server-essentials';
 import { z, infer as ZodInfer } from 'zod';
 import { config, getConfig } from './config';
 const errorCallback: ErrorCallback = (error, ctx) => {
@@ -33,11 +26,14 @@ const bodySchema = z.object({
   age: z.number().min(0),
 });
 
-const TestController: Controller<
-  ZodInfer<typeof querySchema>,
-  ZodInfer<typeof paramsSchema>,
-  ZodInfer<typeof bodySchema>
-> = async ({ query, params, method, path, body, headers }) => {
+const TestController: Controller<ZodInfer<typeof querySchema>, ZodInfer<typeof paramsSchema>, ZodInfer<typeof bodySchema>> = async ({
+  query,
+  params,
+  method,
+  path,
+  body,
+  headers,
+}) => {
   return {
     status: 200,
     body: { query, params, method, path, body, headers, config },
@@ -50,8 +46,33 @@ router.post(
   koaCallback(TestController, { querySchema, paramsSchema, bodySchema })
 );
 
+type HealthChecks = {
+  [service: string]: () => HealthCheck;
+};
+const plugins: Plugin<any>[] = [
+  {
+    connect: () => ({ name: 'test', healthCheck: () => ({ connected: true }) }),
+    disconnect: () => {
+      console.log('Disconnecting test plugin');
+    },
+  },
+  {
+    connect: () => ({ name: 'test2', healthCheck: () => ({ connected: true }) }),
+    disconnect: () => {
+      console.log('Disconnecting test2 plugin');
+    },
+  },
+];
+const healthChecks: HealthChecks = {};
+
 async function main() {
   getConfig();
+
+  plugins.forEach(plugin => {
+    const { name, healthCheck } = plugin.connect(null);
+    Object.assign(healthChecks, { [name]: healthCheck });
+  });
+
   const koaApp = await getKoaServer({
     logger: console,
     errorCallback,
@@ -62,9 +83,7 @@ async function main() {
   setupRootRoute({
     serviceName: config.service.name,
     serviceVersion: config.service.version,
-    healthChecks: {
-      test: () => ({ connected: true, status: 'connected' }),
-    },
+    healthChecks,
     nodeEnv: config.nodeEnv,
     showRoutes: !config.isProduction,
   });
