@@ -12,7 +12,7 @@ export const STATUSES = [
 
 type Status = (typeof STATUSES)[number];
 
-type HealthCheck = {
+export type HealthCheck = {
   connected?: boolean;
   status?: Status;
 };

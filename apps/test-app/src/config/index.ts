@@ -38,10 +38,3 @@ export const getConfig = (): void => {
   const envConfig = loadConfigFromEnv(configSchema, eventMapping);
   config = { ...envConfig, isProduction: ['production', 'prod'].includes(envConfig.nodeEnv) };
 };
-
-export function upTime(): string {
-  const seconds = process.uptime();
-  return new Date(seconds * 1000).toISOString().substr(11, 8);
-
-  // return `${hours}h ${minutes}m ${seconds}s`;
-}

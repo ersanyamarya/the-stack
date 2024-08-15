@@ -1,5 +1,12 @@
-import Router from '@koa/router';
-import { Controller, ErrorCallback, getKoaServer, koaCallback, RequestValidationError } from '@local/server-essentials';
+import {
+  Controller,
+  ErrorCallback,
+  getKoaServer,
+  koaCallback,
+  RequestValidationError,
+  router,
+  setupRootRoute,
+} from '@local/server-essentials';
 import { z, infer as ZodInfer } from 'zod';
 import { config, getConfig } from './config';
 const errorCallback: ErrorCallback = (error, ctx) => {
@@ -25,8 +32,6 @@ const bodySchema = z.object({
   name: z.string(),
   age: z.number().min(0),
 });
-
-const router = new Router();
 
 const TestController: Controller<
   ZodInfer<typeof querySchema>,
@@ -54,13 +59,18 @@ async function main() {
     serviceVersion: config.service.version,
   });
 
+  setupRootRoute({
+    serviceName: config.service.name,
+    serviceVersion: config.service.version,
+    healthChecks: {
+      test: () => ({ connected: true, status: 'connected' }),
+    },
+    nodeEnv: config.nodeEnv,
+    showRoutes: !config.isProduction,
+  });
+
   koaApp.use(router.routes());
   koaApp.use(router.allowedMethods());
-
-  // all other routes
-  koaApp.use(async ctx => {
-    ctx.body = "You're lost";
-  });
 
   koaApp.listen(config.server.port, () => {
     console.log(`Server listening on ${config.server.url}`);
