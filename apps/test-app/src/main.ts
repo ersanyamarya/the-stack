@@ -40,7 +40,6 @@ const TestController: Controller<
 };
 
 router.post(
-  'getTest',
   '/getTest/:id',
 
   koaCallback(TestController, { querySchema, paramsSchema, bodySchema })
