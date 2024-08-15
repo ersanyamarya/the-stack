@@ -27,7 +27,10 @@ type PluginConfig<T> = T;
 // Define the plugin interface with generics
 interface Plugin<T> {
   // Connect function that returns a function to get the health check
-  connect(config: PluginConfig<T>): () => HealthCheck;
+  connect(config: PluginConfig<T>): () => {
+    name: string;
+    healthCheck: () => HealthCheck;
+  };
 
   // Disconnect function
   disconnect(): void;

@@ -1,7 +1,7 @@
 import { Logger } from '@local/infra-types';
 import { Context } from 'koa';
 import { vi } from 'vitest';
-import { getKoaServer, ServerEssentialsOptions } from './server-essentials';
+import { getKoaServer, ServerEssentialsOptions } from './koa-server';
 
 export const mockLogger: Logger = {
   info: vi.fn(),
