@@ -1,7 +1,16 @@
+import Router from '@koa/router';
 import { HealthCheck, Plugin } from '@local/infra-types';
-import { Controller, ErrorCallback, getKoaServer, koaCallback, RequestValidationError, router, setupRootRoute } from '@local/server-essentials';
+import {
+  Controller,
+  ErrorCallback,
+  getKoaServer,
+  koaCallback,
+  RequestValidationError,
+  setupRootRoute,
+} from '@local/server-essentials';
 import { z, infer as ZodInfer } from 'zod';
 import { config, getConfig } from './config';
+
 const errorCallback: ErrorCallback = (error, ctx) => {
   if (error instanceof RequestValidationError) {
     ctx.status = 400;
@@ -26,20 +35,18 @@ const bodySchema = z.object({
   age: z.number().min(0),
 });
 
-const TestController: Controller<ZodInfer<typeof querySchema>, ZodInfer<typeof paramsSchema>, ZodInfer<typeof bodySchema>> = async ({
-  query,
-  params,
-  method,
-  path,
-  body,
-  headers,
-}) => {
+const TestController: Controller<
+  ZodInfer<typeof querySchema>,
+  ZodInfer<typeof paramsSchema>,
+  ZodInfer<typeof bodySchema>
+> = async ({ query, params, method, path, body, headers }) => {
   return {
     status: 200,
     body: { query, params, method, path, body, headers, config },
   };
 };
 
+const router = new Router();
 router.post(
   '/getTest/:id',
 
@@ -80,13 +87,16 @@ async function main() {
     serviceVersion: config.service.version,
   });
 
-  setupRootRoute({
-    serviceName: config.service.name,
-    serviceVersion: config.service.version,
-    healthChecks,
-    nodeEnv: config.nodeEnv,
-    showRoutes: !config.isProduction,
-  });
+  setupRootRoute(
+    {
+      serviceName: config.service.name,
+      serviceVersion: config.service.version,
+      healthChecks,
+      nodeEnv: config.nodeEnv,
+      showRoutes: !config.isProduction,
+    },
+    router
+  );
 
   koaApp.use(router.routes());
   koaApp.use(router.allowedMethods());

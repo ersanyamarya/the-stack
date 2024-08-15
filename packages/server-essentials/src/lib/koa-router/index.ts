@@ -44,7 +44,7 @@ export function setupRootRoute(
     };
   });
 
-  router.get('/ok', ctx => {
+  router.get('status ok', '/ok', ctx => {
     ctx.body = 'ok';
   });
 }

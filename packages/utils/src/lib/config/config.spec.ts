@@ -18,7 +18,7 @@ const configSchema = z.object({
 });
 
 // Nested environment variable mapping
-const nestedEnvMapping = {
+const environmentMapping = {
   service: {
     name: 'TEST_SERVICE_NAME',
     version: 'TEST_SERVICE_VERSION',
@@ -46,7 +46,7 @@ describe('loadConfigFromEnv', () => {
 
   describe('with valid environment variables', () => {
     it('should load configuration correctly from env', () => {
-      const config = loadConfigFromEnv(configSchema, nestedEnvMapping);
+      const config = loadConfigFromEnv(configSchema, environmentMapping);
 
       expect(config.service.name).toBe('MyService');
       expect(config.service.version).toBe('1.0.0');
@@ -61,19 +61,19 @@ describe('loadConfigFromEnv', () => {
   describe('with invalid environment variables', () => {
     it('should throw an error for invalid number', () => {
       process.env['TEST_SERVICE_PORT'] = 'not-a-number';
-      expect(() => loadConfigFromEnv(configSchema, nestedEnvMapping)).toThrow('Invalid value for port');
+      expect(() => loadConfigFromEnv(configSchema, environmentMapping)).toThrow('Invalid value for port');
     });
 
     it('should throw an error for invalid boolean', () => {
       process.env['IS_FEATURE_ENABLED'] = 'not-a-boolean';
-      expect(() => loadConfigFromEnv(configSchema, nestedEnvMapping)).toThrow('Invalid boolean');
+      expect(() => loadConfigFromEnv(configSchema, environmentMapping)).toThrow('Invalid boolean');
     });
   });
 
   describe('with default values', () => {
     it('should use default values when environment variables are not set', () => {
       delete process.env['NODE_ENV'];
-      const config = loadConfigFromEnv(configSchema, nestedEnvMapping);
+      const config = loadConfigFromEnv(configSchema, environmentMapping);
 
       expect(config.nodeEnv).toBe('development');
     });
@@ -82,7 +82,26 @@ describe('loadConfigFromEnv', () => {
   describe('with missing environment variables', () => {
     it('should throw an error for missing required variables', () => {
       delete process.env['TEST_SERVICE_NAME'];
-      expect(() => loadConfigFromEnv(configSchema, nestedEnvMapping)).toThrow('Invalid value for name');
+      expect(() => loadConfigFromEnv(configSchema, environmentMapping)).toThrow('Invalid value for name');
+    });
+
+    it('should use the Key to uppercase if environmentMapping is missing a key', () => {
+      const eventsMappingWithoutFeatures = {
+        service: {
+          name: 'TEST_SERVICE_NAME',
+          version: 'TEST_SERVICE_VERSION',
+        },
+        server: {
+          port: 'TEST_SERVICE_PORT',
+          url: 'TEST_SERVICE_URL',
+        },
+        nodeEnv: 'NODE_ENV',
+        isFeatureEnabled: 'IS_FEATURE_ENABLED',
+      };
+
+      const config = loadConfigFromEnv(configSchema, eventsMappingWithoutFeatures);
+
+      expect(config.features).toEqual(['feature1', 'feature2']);
     });
   });
 });
