@@ -1,6 +1,7 @@
 # utils
 
-## 
+##
+
 ## README Section for `config.ts` and `config.spec.ts`
 
 ### Overview
