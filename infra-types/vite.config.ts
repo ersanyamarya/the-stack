@@ -6,7 +6,7 @@ import dts from 'vite-plugin-dts';
 
 export default defineConfig({
   root: __dirname,
-  cacheDir: '../../node_modules/.vite/packages/infra-types',
+  cacheDir: '../node_modules/.vite/packages/infra-types',
 
   plugins: [nxViteTsPaths(), dts({ entryRoot: 'src', tsconfigPath: path.join(__dirname, 'tsconfig.lib.json') })],
 
@@ -18,7 +18,7 @@ export default defineConfig({
   // Configuration for building your library.
   // See: https://vitejs.dev/guide/build.html#library-mode
   build: {
-    outDir: '../../dist/packages/infra-types',
+    outDir: '../dist/packages/infra-types',
     emptyOutDir: true,
     reportCompressedSize: true,
     commonjsOptions: {

@@ -16,9 +16,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@local/infra-types": ["infra-types/src/index.ts"],
       "@local/server-essentials": ["packages/server-essentials/src/index.ts"],
-      "@local/utils": ["packages/utils/src/index.ts"],
-      "@local/infra-types": ["packages/infra-types/src/index.ts"]
+      "@local/utils": ["packages/utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
