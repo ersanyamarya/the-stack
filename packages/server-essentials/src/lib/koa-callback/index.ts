@@ -17,15 +17,13 @@ export class RequestValidationError extends Error {
   }
 }
 
-type CommonControllerData<Query, Params> = {
+export type BaseControllerData<Query, Params, Body> = {
   query: Query;
   params: Params;
   path: string;
   headers: IncomingHttpHeaders;
-};
-
-export type BaseControllerData<Query, Params, Body> = CommonControllerData<Query, Params> & {
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  ctx: Context;
   body?: Body;
 };
 
@@ -34,7 +32,9 @@ export type ControllerResponse = {
   body: unknown;
 };
 
-export type Controller<Query, Params, Body> = (data: BaseControllerData<Query, Params, Body>) => Promise<ControllerResponse>;
+export type Controller<Query, Params, Body> = (
+  data: BaseControllerData<Query, Params, Body>
+) => Promise<ControllerResponse>;
 
 export type ValidationSchemas<Query extends ZodTypeAny, Params extends ZodTypeAny, Body extends ZodTypeAny> = {
   querySchema?: Query;
@@ -47,8 +47,8 @@ export function koaCallback<Query extends ZodTypeAny, Params extends ZodTypeAny,
   schemas: ValidationSchemas<Query, Params, Body> = {}
 ): (ctx: Context) => Promise<void> {
   return async (ctx: Context) => {
-    let query = getQuery(ctx.query);
     const params = ctx['params'] as Record<string, string>;
+    let query = ctx.query;
     const path = ctx.path;
     const method = ctx.method as 'GET' | 'POST' | 'PUT' | 'DELETE';
     const headers = ctx.headers;
@@ -79,12 +79,16 @@ export function koaCallback<Query extends ZodTypeAny, Params extends ZodTypeAny,
       }
     }
 
-    const result = await controller({ query, params, body, method, path, headers } as BaseControllerData<ZodInfer<Query>, ZodInfer<Params>, ZodInfer<Body>>);
+    const result = await controller({ query, params, body, method, path, headers, ctx } as BaseControllerData<
+      ZodInfer<Query>,
+      ZodInfer<Params>,
+      ZodInfer<Body>
+    >);
     ctx.status = result.status;
     ctx.body = result.body;
   };
 }
 
-function getQuery(query: Record<string, string | string[] | undefined>): Record<string, string> {
-  return Object.fromEntries(Object.entries(query).map(([key, value]) => [key, Array.isArray(value) ? value[0] : String(value)])) as Record<string, string>;
-}
+// function getQuery(query: Record<string, string | string[] | undefined>): Record<string, unknown> {
+//   return Object.fromEntries(Object.entries(query).map(([key, value]) => [key, value ?? '']));
+// }
