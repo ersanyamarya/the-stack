@@ -16,11 +16,15 @@ const bodySchema = z.object({
   age: z.number().min(0),
 });
 
-const TestController: Controller<
-  ZodInfer<typeof querySchema>,
-  ZodInfer<typeof paramsSchema>,
-  ZodInfer<typeof bodySchema>
-> = async ({ query, params, method, path, body, headers, ctx }) => {
+const TestController: Controller<ZodInfer<typeof querySchema>, ZodInfer<typeof paramsSchema>, ZodInfer<typeof bodySchema>> = async ({
+  query,
+  params,
+  method,
+  path,
+  body,
+  headers,
+  ctx,
+}) => {
   ctx.logger.info('TestController called');
   return {
     status: 200,

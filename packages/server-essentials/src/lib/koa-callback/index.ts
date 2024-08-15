@@ -32,9 +32,7 @@ export type ControllerResponse = {
   body: unknown;
 };
 
-export type Controller<Query, Params, Body> = (
-  data: BaseControllerData<Query, Params, Body>
-) => Promise<ControllerResponse>;
+export type Controller<Query, Params, Body> = (data: BaseControllerData<Query, Params, Body>) => Promise<ControllerResponse>;
 
 export type ValidationSchemas<Query extends ZodTypeAny, Params extends ZodTypeAny, Body extends ZodTypeAny> = {
   querySchema?: Query;

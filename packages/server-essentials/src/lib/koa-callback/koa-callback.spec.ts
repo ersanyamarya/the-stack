@@ -95,9 +95,7 @@ describe('koaCallback Error Handling', () => {
 
       router.get('/test-array', koaCallback(mockController, { querySchema }));
 
-      const response = await request(app.callback()).get(
-        '/test-array?search=valid&page=1&active=true&tags=tag1&tags=tag2'
-      );
+      const response = await request(app.callback()).get('/test-array?search=valid&page=1&active=true&tags=tag1&tags=tag2');
       expect(response.status).toBe(200);
       expect(response.body.query).toEqual({ search: 'valid', page: 1, active: true, tags: ['tag1', 'tag2'] });
     });
@@ -118,9 +116,7 @@ describe('koaCallback Error Handling', () => {
     it('should invoke mockErrorCallback for invalid body parameter type', async () => {
       router.post('/test/:id', koaCallback(mockController, { paramsSchema, bodySchema }));
 
-      await request(app.callback())
-        .post('/test/123e4567-e89b-12d3-a456-426614174000')
-        .send({ name: 'John', age: 'thirty' }); // Age should be a number
+      await request(app.callback()).post('/test/123e4567-e89b-12d3-a456-426614174000').send({ name: 'John', age: 'thirty' }); // Age should be a number
       expect(mockErrorCallback).toHaveBeenCalled();
 
       const errorArg = mockErrorCallback.mock.calls[0][0];
@@ -142,9 +138,7 @@ describe('koaCallback Error Handling', () => {
     it('should handle valid body parameters', async () => {
       router.post('/test/:id', koaCallback(mockController, { paramsSchema, bodySchema }));
 
-      const response = await request(app.callback())
-        .post('/test/123e4567-e89b-12d3-a456-426614174000')
-        .send({ name: 'John', age: 35 });
+      const response = await request(app.callback()).post('/test/123e4567-e89b-12d3-a456-426614174000').send({ name: 'John', age: 35 });
       expect(response.status).toBe(200);
       expect(response.body.body).toEqual({ name: 'John', age: 35 });
     });
@@ -165,9 +159,7 @@ describe('koaCallback Error Handling', () => {
     it('should handle valid route parameters', async () => {
       router.post('/test/:id', koaCallback(mockController, { paramsSchema, bodySchema }));
 
-      const response = await request(app.callback())
-        .post('/test/123e4567-e89b-12d3-a456-426614174000')
-        .send({ name: 'John', age: 35 });
+      const response = await request(app.callback()).post('/test/123e4567-e89b-12d3-a456-426614174000').send({ name: 'John', age: 35 });
       expect(response.status).toBe(200);
       expect(response.body.params).toEqual({ id: '123e4567-e89b-12d3-a456-426614174000' });
     });
