@@ -10,7 +10,8 @@
     "http-status-codes": "^2.3.0",
     "@koa/cors": "^5.0.0",
     "@koa/bodyparser": "^5.1.1",
-    "koa-helmet": "^7.0.2"
+    "koa-helmet": "^7.0.2",
+    "infra-types": "0.0.1"
   },
   "main": "./index.js",
   "module": "./index.mjs",
