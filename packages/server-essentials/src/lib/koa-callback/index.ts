@@ -34,9 +34,7 @@ export type ControllerResponse = {
   body: unknown;
 };
 
-export type Controller<Query, Params, Body> = (
-  data: BaseControllerData<Query, Params, Body>
-) => Promise<ControllerResponse>;
+export type Controller<Query, Params, Body> = (data: BaseControllerData<Query, Params, Body>) => Promise<ControllerResponse>;
 
 export type ValidationSchemas<Query extends ZodTypeAny, Params extends ZodTypeAny, Body extends ZodTypeAny> = {
   querySchema?: Query;
@@ -81,18 +79,12 @@ export function koaCallback<Query extends ZodTypeAny, Params extends ZodTypeAny,
       }
     }
 
-    const result = await controller({ query, params, body, method, path, headers } as BaseControllerData<
-      ZodInfer<Query>,
-      ZodInfer<Params>,
-      ZodInfer<Body>
-    >);
+    const result = await controller({ query, params, body, method, path, headers } as BaseControllerData<ZodInfer<Query>, ZodInfer<Params>, ZodInfer<Body>>);
     ctx.status = result.status;
     ctx.body = result.body;
   };
 }
 
 function getQuery(query: Record<string, string | string[] | undefined>): Record<string, string> {
-  return Object.fromEntries(
-    Object.entries(query).map(([key, value]) => [key, Array.isArray(value) ? value[0] : String(value)])
-  ) as Record<string, string>;
+  return Object.fromEntries(Object.entries(query).map(([key, value]) => [key, Array.isArray(value) ? value[0] : String(value)])) as Record<string, string>;
 }

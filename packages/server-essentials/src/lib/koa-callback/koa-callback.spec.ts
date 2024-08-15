@@ -102,9 +102,7 @@ describe('koaCallback Error Handling', () => {
       router.post('/test/:id', koaCallback(mockController, { paramsSchema, bodySchema }));
       app.use(router.routes());
 
-      await request(app.callback())
-        .post('/test/123e4567-e89b-12d3-a456-426614174000')
-        .send({ name: 'John', age: 'thirty' }); // Age should be a number
+      await request(app.callback()).post('/test/123e4567-e89b-12d3-a456-426614174000').send({ name: 'John', age: 'thirty' }); // Age should be a number
       expect(mockErrorCallback).toHaveBeenCalled();
 
       const errorArg = mockErrorCallback.mock.calls[0][0];
@@ -130,9 +128,7 @@ describe('koaCallback Error Handling', () => {
       router.post('/test/:id', koaCallback(mockController, { paramsSchema, bodySchema }));
       app.use(router.routes());
 
-      const response = await request(app.callback())
-        .post('/test/123e4567-e89b-12d3-a456-426614174000')
-        .send({ name: 'John', age: 35 });
+      const response = await request(app.callback()).post('/test/123e4567-e89b-12d3-a456-426614174000').send({ name: 'John', age: 35 });
       expect(response.status).toBe(200);
       expect(response.body.body).toEqual({ name: 'John', age: 35 });
     });
@@ -157,9 +153,7 @@ describe('koaCallback Error Handling', () => {
       router.post('/test/:id', koaCallback(mockController, { paramsSchema, bodySchema }));
       app.use(router.routes());
 
-      const response = await request(app.callback())
-        .post('/test/123e4567-e89b-12d3-a456-426614174000')
-        .send({ name: 'John', age: 35 });
+      const response = await request(app.callback()).post('/test/123e4567-e89b-12d3-a456-426614174000').send({ name: 'John', age: 35 });
       expect(response.status).toBe(200);
       expect(response.body.params).toEqual({ id: '123e4567-e89b-12d3-a456-426614174000' });
     });

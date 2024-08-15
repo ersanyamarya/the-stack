@@ -12,13 +12,7 @@ export type RootRouteOptions = {
   [key: string]: unknown;
 };
 
-export function setupRootRoute({
-  serviceName,
-  serviceVersion,
-  showRoutes = false,
-  healthChecks,
-  ...info
-}: RootRouteOptions) {
+export function setupRootRoute({ serviceName, serviceVersion, showRoutes = false, healthChecks, ...info }: RootRouteOptions) {
   const checks: Record<string, HealthCheck> = {};
   if (healthChecks) {
     Object.entries(healthChecks).forEach(([pluginName, callback]) => {

@@ -1,14 +1,6 @@
 import { Logger } from './logger';
 
-export const STATUSES = [
-  'connected',
-  'disconnected',
-  'error',
-  'connecting',
-  'disconnecting',
-  'reconnecting',
-  'unknown',
-] as const;
+export const STATUSES = ['connected', 'disconnected', 'error', 'connecting', 'disconnecting', 'reconnecting', 'unknown'] as const;
 
 type Status = (typeof STATUSES)[number];
 
