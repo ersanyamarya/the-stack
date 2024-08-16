@@ -114,12 +114,12 @@ export const gracefulShutdown = (logger: Logger, onShutdown?: Function, server?:
   }
 
   process.on('SIGINT', async (): Promise<void> => {
-    logger.info('Got SIGINT. Graceful shutdown');
+    logger.warn('Got SIGINT. Graceful shutdown');
     await shutdown(logger, onShutdown, server, sockets);
   });
 
   process.on('SIGTERM', async (): Promise<void> => {
-    logger.info('Got SIGTERM. Graceful shutdown');
+    logger.warn('Got SIGTERM. Graceful shutdown');
     await shutdown(logger, onShutdown, server, sockets);
   });
 };

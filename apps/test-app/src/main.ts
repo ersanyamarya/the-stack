@@ -4,6 +4,14 @@ import { ErrorCallback, getKoaServer, RequestValidationError, setupRootRoute } f
 import { exceptions, gracefulShutdown } from '@local/utils';
 import { config, getConfig } from './config';
 
+// green color for info, yellow for warn, red for error, and blue for debug
+const ConsoleTextColorLogger: Logger = {
+  info: (message: string, ...optionalParams: unknown[]) => console.log('\x1b[32m', message, ...optionalParams),
+  warn: (message: string, ...optionalParams: unknown[]) => console.log('\x1b[33m', message, ...optionalParams),
+  error: (message: string, ...optionalParams: unknown[]) => console.log('\x1b[31m', message, ...optionalParams),
+  debug: (message: string, ...optionalParams: unknown[]) => console.log('\x1b[34m', message, ...optionalParams),
+};
+
 import controllers from './controllers';
 const errorCallback: ErrorCallback = (error, ctx) => {
   if (error instanceof RequestValidationError) {
@@ -15,36 +23,37 @@ const errorCallback: ErrorCallback = (error, ctx) => {
   ctx.body = 'Internal server error';
 };
 
-const localLogger: Logger = console;
+const localLogger: Logger = ConsoleTextColorLogger;
 
 const router = new Router();
 
 type HealthChecks = {
-  [service: string]: () => HealthCheck;
+  [service: string]: () => Promise<HealthCheck>;
 };
 const plugins: Plugin<any>[] = [
   {
     connect: async () => {
-      localLogger.info('Connecting test plugin');
-      return Promise.resolve({ name: 'test', healthCheck: async () => ({ connected: true }) });
+      localLogger.info('Connecting TEST-1 plugin');
+      return { name: 'TEST-1', healthCheck: async () => ({ connected: true }) };
     },
     disconnect: async () => {
-      localLogger.info('Disconnecting test plugin');
+      localLogger.warn('Disconnecting TEST-1 plugin');
     },
   },
   {
     connect: async () => {
-      localLogger.info('Connecting test2 plugin');
-      return { name: 'test2', healthCheck: async () => ({ connected: true }) };
+      localLogger.info('Connecting TEST-2 plugin');
+      return { name: 'TEST-2', healthCheck: async () => ({ connected: true }) };
     },
     disconnect: async () => {
-      localLogger.info('Disconnecting test2 plugin');
+      localLogger.warn('Disconnecting TEST-2 plugin');
     },
   },
 ];
+
 const healthChecks: HealthChecks = {};
 const onShutdown = async () => {
-  localLogger.info('Shutting down');
+  localLogger.warn('Shutting down');
   await Promise.all(plugins.map(plugin => plugin.disconnect()));
 };
 plugins.forEach(async plugin => {
@@ -69,14 +78,14 @@ async function main() {
       serviceName: config.service.name,
       serviceVersion: config.service.version,
       healthChecks,
-      nodeEnv: config.nodeEnv,
       showRoutes: !config.isProduction,
+      nodeEnv: config.nodeEnv,
     },
     router
   );
 
   controllers.forEach(({ name, method, path, callback }) => {
-    localLogger.info(`Setting up route ${method.toUpperCase()} ${path}`);
+    localLogger.info(`--> Setting up route ${method.toUpperCase()} ${path}`);
     // eslint-disable-next-line security/detect-object-injection
     router[method](name, path, callback);
   });

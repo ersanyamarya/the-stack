@@ -6,7 +6,7 @@ export type RootRouteOptions = {
   serviceVersion: string;
   showRoutes?: boolean;
   healthChecks: {
-    [pluginName: string]: () => HealthCheck;
+    [pluginName: string]: () => Promise<HealthCheck>;
   };
   [key: string]: unknown;
 };
@@ -14,8 +14,8 @@ export type RootRouteOptions = {
 export function setupRootRoute({ serviceName, serviceVersion, showRoutes = false, healthChecks, ...info }: RootRouteOptions, router: Router) {
   const checks: Record<string, HealthCheck> = {};
   if (healthChecks) {
-    Object.entries(healthChecks).forEach(([pluginName, callback]) => {
-      Object.assign(checks, { [pluginName]: callback() });
+    Object.entries(healthChecks).forEach(async ([pluginName, callback]) => {
+      Object.assign(checks, { [pluginName]: await callback() });
     });
   }
 

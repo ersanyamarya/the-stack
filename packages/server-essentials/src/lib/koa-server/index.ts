@@ -23,7 +23,7 @@ export type ServerEssentialsOptions = {
 };
 
 export async function getKoaServer({ logger, errorCallback, serviceName, serviceVersion }: ServerEssentialsOptions) {
-  logger.info('--------------------> Starting server <--------------------');
+  logger.info('Setting up Koa Server');
   const app = new Koa();
   app.use(helmet());
   app.use(async (ctx, next) => {
