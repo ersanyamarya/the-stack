@@ -38,6 +38,20 @@ export function setupRootRoute({ serviceName, serviceVersion, showRoutes = false
             })),
           }
         : {}),
+    } as {
+      service: {
+        name: string;
+        version: string;
+        status: string;
+        uptime: string;
+      };
+      checks: Record<string, HealthCheck>;
+      routes?: {
+        methods: string;
+        path: string;
+        name: string;
+      }[];
+      [key: string]: unknown;
     };
   });
 

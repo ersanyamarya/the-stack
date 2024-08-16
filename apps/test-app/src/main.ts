@@ -34,7 +34,7 @@ const plugins: Plugin<any>[] = [
   {
     connect: async () => {
       localLogger.info('Connecting TEST-1 plugin');
-      return { name: 'TEST-1', healthCheck: async () => ({ connected: true }) };
+      return { name: 'TEST-1', healthCheck: async (): Promise<HealthCheck> => ({ connected: true, status: 'connected' }) };
     },
     disconnect: async () => {
       localLogger.warn('Disconnecting TEST-1 plugin');
@@ -43,7 +43,7 @@ const plugins: Plugin<any>[] = [
   {
     connect: async () => {
       localLogger.info('Connecting TEST-2 plugin');
-      return { name: 'TEST-2', healthCheck: async () => ({ connected: true }) };
+      return { name: 'TEST-2', healthCheck: async (): Promise<HealthCheck> => ({ connected: true, status: 'error' }) };
     },
     disconnect: async () => {
       localLogger.warn('Disconnecting TEST-2 plugin');
