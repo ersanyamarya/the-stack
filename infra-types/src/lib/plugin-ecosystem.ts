@@ -12,13 +12,13 @@ export type HealthCheck = {
 // Define the plugin interface with generics
 export interface Plugin<T extends Record<string, unknown>> {
   // Connect function that returns a function to get the health check
-  connect(config: T): {
+  connect(config: T): Promise<{
     name: string;
-    healthCheck: () => HealthCheck;
-  };
+    healthCheck: () => Promise<HealthCheck>;
+  }>;
 
   // Disconnect function
-  disconnect(): void;
+  disconnect(): Promise<void>;
 }
 
 // Define a factory function for creating plugins with a logger

@@ -83,35 +83,43 @@ const closeSockets = (sockets: SocketsMap, logger: Logger): void => {
  * @param {Logger} logger - The logger instance.
  * @param {Function} [onShutdown] - A function that will be called when the server is shutting down.
  */
-const shutdown = async (server: Server, sockets: SocketsMap, logger: Logger, onShutdown?: Function): Promise<void> => {
-  closeSockets(sockets, logger);
+const shutdown = async (logger: Logger, onShutdown?: Function, server?: Server, sockets?: SocketsMap): Promise<void> => {
+  if (sockets) {
+    closeSockets(sockets, logger);
+  }
 
   if (onShutdown) {
     await onShutdown();
   }
 
-  server.close(err => {
-    if (err) {
-      logger.error('Error while shutting down', { err });
+  if (server) {
+    server.close(err => {
+      if (err) {
+        logger.error('Error while shutting down', { err });
 
-      return process.exit(1);
-    }
+        return process.exit(1);
+      }
 
-    process.exit(0);
-  });
+      process.exit(0);
+    });
+  }
 };
 
 /* When the process receives SIGINT or SIGTERM, it will gracefully shutdown the server. */
-export const gracefulShutdown = (server: Server, logger: Logger, onShutdown?: Function): void => {
-  const sockets: SocketsMap = getSockets(server);
+export const gracefulShutdown = (logger: Logger, onShutdown?: Function, server?: Server): void => {
+  let sockets: SocketsMap = {};
+
+  if (server) {
+    sockets = getSockets(server);
+  }
 
   process.on('SIGINT', async (): Promise<void> => {
     logger.info('Got SIGINT. Graceful shutdown');
-    await shutdown(server, sockets, logger, onShutdown);
+    await shutdown(logger, onShutdown, server, sockets);
   });
 
   process.on('SIGTERM', async (): Promise<void> => {
     logger.info('Got SIGTERM. Graceful shutdown');
-    await shutdown(server, sockets, logger, onShutdown);
+    await shutdown(logger, onShutdown, server, sockets);
   });
 };
