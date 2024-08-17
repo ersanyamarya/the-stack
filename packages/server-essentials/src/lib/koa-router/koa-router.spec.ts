@@ -9,7 +9,7 @@ const options: RootRouteOptions = {
   serviceName: 'test-service',
   serviceVersion: '1.0.0',
   healthChecks: {
-    test: () => ({ status: 'connected', connected: true }),
+    test: async () => ({ status: 'connected', connected: true }),
   },
   showRoutes: true,
 };
