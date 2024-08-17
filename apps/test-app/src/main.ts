@@ -24,7 +24,7 @@ const errorCallback: ErrorCallback = (error, ctx) => {
     ctx.body = {
       status: error.statusCode,
       errorCode: error.errorCode,
-      metadata: error.metadata,
+      ...(error.metadata ? { metadata: error.metadata } : {}),
     };
     return;
   }
@@ -94,7 +94,7 @@ async function main() {
   );
 
   controllers.forEach(({ name, method, path, callback }) => {
-    localLogger.info(`--> Setting up route ${method.toUpperCase()} ${path}`);
+    localLogger.info(`Setting up route ${method.toUpperCase()} ${path}`);
     // eslint-disable-next-line security/detect-object-injection
     router[method](name, path, callback);
   });

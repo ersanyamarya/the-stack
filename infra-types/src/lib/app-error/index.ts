@@ -11,7 +11,7 @@ type AppErrorOptions<ErrorCode extends ERROR_CODE_KEYS> = {
 export class AppError<ErrorCode extends ERROR_CODE_KEYS> extends Error {
   public errorCode: ErrorCode;
   public where: string | undefined;
-  public metadata: z.infer<ErrorCode extends ERROR_CODE_KEYS ? (typeof errorCodes)[ErrorCode]['metaData'] : ZodTypeAny> = { resource: '' };
+  public metadata: z.infer<ErrorCode extends ERROR_CODE_KEYS ? (typeof errorCodes)[ErrorCode]['metaData'] : ZodTypeAny> | null;
   public statusCode: number = httpStatusCodes.INTERNAL_SERVER_ERROR;
 
   constructor(code: ErrorCode, logger: Logger, { context = {}, metadata }: AppErrorOptions<ErrorCode> = {}) {
@@ -27,7 +27,7 @@ export class AppError<ErrorCode extends ERROR_CODE_KEYS> extends Error {
     const where = stack?.[1]?.trim().replace('at ', '');
     this.where = where;
 
-    this.metadata = metadata || { resource: '' };
+    this.metadata = metadata || null;
 
     logger.error({
       code,

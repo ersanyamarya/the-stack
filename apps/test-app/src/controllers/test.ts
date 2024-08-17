@@ -27,9 +27,8 @@ const TestController: Controller<ZodInfer<typeof querySchema>, ZodInfer<typeof p
 }) => {
   ctx.logger.info('TestController called');
   if (query.search === 'error') {
-    throw new AppError('RESOURCE_ALREADY_EXISTS', ctx.logger, {
+    throw new AppError('USER_UNAUTHENTICATED', ctx.logger, {
       context: { search: query.search },
-      metadata: { resource: 'search' },
     });
   }
   return {
