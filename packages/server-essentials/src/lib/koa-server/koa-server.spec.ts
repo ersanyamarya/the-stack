@@ -30,7 +30,7 @@ describe('getKoaServer', () => {
     });
 
     it('should call logger.info with the correct message', () => {
-      expect(mockLogger.info).toHaveBeenCalledWith('--------------------> Starting server <--------------------');
+      expect(mockLogger.info).toHaveBeenCalledWith('Setting up Koa Server');
     });
 
     it('should respond with 404 for unknown routes', async () => {

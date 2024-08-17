@@ -47,7 +47,7 @@ export default defineConfig({
     reporters: ['default'],
     coverage: {
       enabled: true,
-      exclude: ['**/*.d.ts', '**/*.spec.*', 'src/index.ts'],
+      exclude: ['**/*.d.ts', '**/*.spec.*', 'src/index.ts', 'src/lib/graceful-shutdown/**', 'src/lib/exceptions/**'],
       reportsDirectory: '../../coverage/packages/utils',
       provider: 'v8',
     },

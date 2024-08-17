@@ -1,6 +1,6 @@
 export type Logger = {
-  info: (message: string, ...optionalParams: unknown[]) => void;
-  warn: (message: string, ...optionalParams: unknown[]) => void;
-  error: (message: string, ...optionalParams: unknown[]) => void;
-  debug: (message: string, ...optionalParams: unknown[]) => void;
+  info: (...optionalParams: unknown[]) => void;
+  warn: (...optionalParams: unknown[]) => void;
+  error: (...optionalParams: unknown[]) => void;
+  debug: (...optionalParams: unknown[]) => void;
 };

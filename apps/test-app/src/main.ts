@@ -1,22 +1,31 @@
 import Router from '@koa/router';
-import { HealthCheck, Logger, Plugin } from '@local/infra-types';
-import { ErrorCallback, getKoaServer, RequestValidationError, setupRootRoute } from '@local/server-essentials';
+import { HealthCheck, isAppError, Logger, Plugin } from '@local/infra-types';
+import { ErrorCallback, getKoaServer, isRequestValidationError, setupRootRoute } from '@local/server-essentials';
 import { exceptions, gracefulShutdown } from '@local/utils';
+import httpStatusCodes from 'http-status-codes';
 import { config, getConfig } from './config';
-
 // green color for info, yellow for warn, red for error, and blue for debug
 const ConsoleTextColorLogger: Logger = {
-  info: (message: string, ...optionalParams: unknown[]) => console.log('\x1b[32m', message, ...optionalParams),
-  warn: (message: string, ...optionalParams: unknown[]) => console.log('\x1b[33m', message, ...optionalParams),
-  error: (message: string, ...optionalParams: unknown[]) => console.log('\x1b[31m', message, ...optionalParams),
-  debug: (message: string, ...optionalParams: unknown[]) => console.log('\x1b[34m', message, ...optionalParams),
+  info: (...optionalParams: unknown[]) => console.log('\x1b[32m', 'ℹ️ ', ...optionalParams, '\x1b[0m'),
+  warn: (...optionalParams: unknown[]) => console.log('\x1b[33m', '⚠️ ', ...optionalParams, '\x1b[0m'),
+  error: (...optionalParams: unknown[]) => console.log('\x1b[31m', '❌ ', ...optionalParams, '\x1b[0m'),
+  debug: (...optionalParams: unknown[]) => console.log('\x1b[34m', '🐛 ', ...optionalParams, '\x1b[0m'),
 };
 
 import controllers from './controllers';
 const errorCallback: ErrorCallback = (error, ctx) => {
-  if (error instanceof RequestValidationError) {
-    ctx.status = 400;
+  if (isRequestValidationError(error)) {
+    ctx.status = httpStatusCodes.BAD_REQUEST;
     ctx.body = error;
+    return;
+  }
+  if (isAppError(error)) {
+    ctx.status = error.statusCode;
+    ctx.body = {
+      status: error.statusCode,
+      errorCode: error.errorCode,
+      metadata: error.metadata,
+    };
     return;
   }
   ctx.status = 500;

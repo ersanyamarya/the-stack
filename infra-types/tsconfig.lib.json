@@ -5,6 +5,7 @@
     "declaration": true,
     "types": ["node", "vite/client"]
   },
+  // "files": ["index.d.ts"],
   "include": ["src/**/*.ts"],
   "exclude": ["src/**/*.spec.ts", "src/**/*.test.ts"]
 }

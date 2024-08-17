@@ -6,15 +6,21 @@ import { infer as ZodInfer, ZodIssue, ZodTypeAny } from 'zod';
 type ERROR_CODES = 'INVALID_QUERY_PARAMS' | 'INVALID_ROUTE_PARAMS' | 'INVALID_REQUEST_BODY';
 
 export class RequestValidationError extends Error {
-  status: ERROR_CODES;
+  errorCode: ERROR_CODES;
   details: ZodIssue[];
 
-  constructor(status: ERROR_CODES, details: ZodIssue[]) {
-    super(status);
+  constructor(errorCode: ERROR_CODES, details: ZodIssue[]) {
+    super(errorCode);
+    this.name = 'RequestValidationError';
     Object.setPrototypeOf(this, RequestValidationError.prototype);
-    this.status = status;
+    Error.captureStackTrace(this, this.constructor);
+    this.errorCode = errorCode;
     this.details = details;
   }
+}
+
+export function isRequestValidationError(error: unknown): error is RequestValidationError {
+  return error instanceof RequestValidationError && error.errorCode !== undefined;
 }
 
 export type BaseControllerData<Query, Params, Body> = {

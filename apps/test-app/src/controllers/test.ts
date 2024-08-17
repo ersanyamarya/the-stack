@@ -1,5 +1,5 @@
+import { AppError } from '@local/infra-types';
 import { Controller, koaCallback } from '@local/server-essentials';
-
 import { z, infer as ZodInfer } from 'zod';
 
 // Define Zod schemas
@@ -26,9 +26,15 @@ const TestController: Controller<ZodInfer<typeof querySchema>, ZodInfer<typeof p
   ctx,
 }) => {
   ctx.logger.info('TestController called');
+  if (query.search === 'error') {
+    throw new AppError('RESOURCE_ALREADY_EXISTS', ctx.logger, {
+      context: { search: query.search },
+      metadata: { resource: 'search' },
+    });
+  }
   return {
     status: 200,
-    body: { query, params, method, path, body, headers, service: ctx.serviceName },
+    body: { query, params, method, path, body, locale: ctx.locale, version: ctx.serviceVersion, service: ctx.serviceName },
   };
 };
 

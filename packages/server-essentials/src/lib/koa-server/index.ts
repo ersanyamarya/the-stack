@@ -10,6 +10,7 @@ declare module 'koa' {
     logger: Logger;
     serviceName: string;
     serviceVersion: string;
+    locale: string;
   }
 }
 
@@ -20,9 +21,10 @@ export type ServerEssentialsOptions = {
   errorCallback: ErrorCallback;
   serviceName: string;
   serviceVersion: string;
+  localeCookieName?: string;
 };
 
-export async function getKoaServer({ logger, errorCallback, serviceName, serviceVersion }: ServerEssentialsOptions) {
+export async function getKoaServer({ logger, errorCallback, serviceName, serviceVersion, localeCookieName }: ServerEssentialsOptions) {
   logger.info('Setting up Koa Server');
   const app = new Koa();
   app.use(helmet());
@@ -32,6 +34,12 @@ export async function getKoaServer({ logger, errorCallback, serviceName, service
       ctx.serviceName = serviceName;
       ctx.serviceVersion = serviceVersion;
 
+      if (localeCookieName) {
+        const cookies = ctx.cookies;
+        ctx.locale = cookies.get(localeCookieName) || 'en';
+      } else {
+        ctx.locale = 'en';
+      }
       await next();
     } catch (error) {
       errorCallback(error, ctx);
