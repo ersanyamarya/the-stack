@@ -1,7 +1,10 @@
 {
   "name": "infra-types",
   "version": "0.0.1",
-  "dependencies": {},
+  "dependencies": {
+    "http-status-codes": "^2.3.0",
+    "zod": "^3.23.8"
+  },
   "main": "./index.js",
   "module": "./index.mjs",
   "typings": "./index.d.ts",
