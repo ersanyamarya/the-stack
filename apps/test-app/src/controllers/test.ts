@@ -26,11 +26,8 @@ const TestController: Controller<ZodInfer<typeof querySchema>, ZodInfer<typeof p
   ctx,
 }) => {
   ctx.logger.info('TestController called');
-  if (query.search === 'error') {
-    throw new AppError('USER_UNAUTHENTICATED', ctx.logger, {
-      context: { search: query.search },
-    });
-  }
+  if (query.search === 'error') throw new AppError('RESOURCE_NOT_FOUND', ctx.logger, { metadata: { resource: 'Test' } });
+
   return {
     status: 200,
     body: { query, params, method, path, body, locale: ctx.locale, version: ctx.serviceVersion, service: ctx.serviceName },

@@ -1,9 +1,10 @@
 import Router from '@koa/router';
-import { HealthCheck, isAppError, Logger, Plugin } from '@local/infra-types';
+import { AppError, HealthCheck, isAppError, Logger, Plugin } from '@local/infra-types';
 import { ErrorCallback, getKoaServer, isRequestValidationError, setupRootRoute } from '@local/server-essentials';
 import { exceptions, gracefulShutdown } from '@local/utils';
 import httpStatusCodes from 'http-status-codes';
 import { config, getConfig } from './config';
+
 // green color for info, yellow for warn, red for error, and blue for debug
 const ConsoleTextColorLogger: Logger = {
   info: (...optionalParams: unknown[]) => console.log('\x1b[32m', 'ℹ️ ', ...optionalParams, '\x1b[0m'),
@@ -11,6 +12,43 @@ const ConsoleTextColorLogger: Logger = {
   error: (...optionalParams: unknown[]) => console.log('\x1b[31m', '❌ ', ...optionalParams, '\x1b[0m'),
   debug: (...optionalParams: unknown[]) => console.log('\x1b[34m', '🐛 ', ...optionalParams, '\x1b[0m'),
 };
+
+import { initTRPC } from '@trpc/server';
+import { createKoaMiddleware } from 'trpc-koa-adapter';
+const ALL_USERS = [
+  { id: 1, name: 'bob' },
+  { id: 2, name: 'alice' },
+];
+
+const trpc = initTRPC.create({
+  errorFormatter: ({ shape, error, path, type, ...rest }) => {
+    if (isAppError(error.cause)) {
+      return {
+        ...shape,
+
+        data: {
+          path,
+          type,
+          status: error.cause.statusCode,
+          errorCode: error.cause.errorCode,
+          ...(error.cause.metadata ? { metadata: error.cause.metadata } : {}),
+        },
+      };
+    }
+
+    return shape;
+  },
+});
+const trpcRouter = trpc.router({
+  user: trpc.procedure
+    .input(Number)
+    .output(Object)
+    .query(req => {
+      throw new AppError('RESOURCE_NOT_FOUND', ConsoleTextColorLogger, { metadata: { resource: 'User' } });
+
+      return ALL_USERS.find(user => req.input === user.id);
+    }),
+});
 
 import controllers from './controllers';
 const errorCallback: ErrorCallback = (error, ctx) => {
@@ -92,6 +130,12 @@ async function main() {
     },
     router
   );
+
+  const adapter = createKoaMiddleware({
+    router: trpcRouter,
+    prefix: '/trpc',
+  });
+  koaApp.use(adapter);
 
   controllers.forEach(({ name, method, path, callback }) => {
     localLogger.info(`Setting up route ${method.toUpperCase()} ${path}`);
