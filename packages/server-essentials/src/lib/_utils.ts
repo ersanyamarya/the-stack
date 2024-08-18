@@ -22,3 +22,4 @@ export const serverConfigurations: ServerEssentialsOptions = {
 };
 
 export const appInstance = getKoaServer(serverConfigurations);
+export const appInstanceWithLocale = getKoaServer({ ...serverConfigurations, localeCookieName: 'locale' });
