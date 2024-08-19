@@ -6,7 +6,7 @@ export function loadConfigFromEnv<ConfigShape extends ZodRawShape, EnvMapping ex
   schema: ZodObject<ConfigShape>,
   envMapping: EnvMapping
 ): z.infer<typeof schema> {
-  const config: Record<string, any> = {};
+  const config: Record<string, unknown> = {};
 
   for (const key in schema.shape) {
     const envKey = envMapping[key] || key.toUpperCase(); // Use the mapping or default to uppercase key
