@@ -14,13 +14,19 @@ export interface GetUserRequest {
 }
 
 export interface GetUserResponse {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  photoUrl: string;
+  id: string;
 }
 
 export interface CreateUserRequest {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  password: string;
+  photoUrl: string;
 }
 
 export interface CreateUserResponse {
@@ -85,16 +91,25 @@ export const GetUserRequest = {
 };
 
 function createBaseGetUserResponse(): GetUserResponse {
-  return { name: "", email: "" };
+  return { firstName: "", lastName: "", email: "", photoUrl: "", id: "" };
 }
 
 export const GetUserResponse = {
   encode(message: GetUserResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
+    if (message.firstName !== "") {
+      writer.uint32(10).string(message.firstName);
+    }
+    if (message.lastName !== "") {
+      writer.uint32(18).string(message.lastName);
     }
     if (message.email !== "") {
-      writer.uint32(18).string(message.email);
+      writer.uint32(26).string(message.email);
+    }
+    if (message.photoUrl !== "") {
+      writer.uint32(34).string(message.photoUrl);
+    }
+    if (message.id !== "") {
+      writer.uint32(42).string(message.id);
     }
     return writer;
   },
@@ -111,14 +126,35 @@ export const GetUserResponse = {
             break;
           }
 
-          message.name = reader.string();
+          message.firstName = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
+          message.lastName = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.email = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.photoUrl = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.id = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -131,18 +167,30 @@ export const GetUserResponse = {
 
   fromJSON(object: any): GetUserResponse {
     return {
-      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      firstName: isSet(object.firstName) ? globalThis.String(object.firstName) : "",
+      lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : "",
       email: isSet(object.email) ? globalThis.String(object.email) : "",
+      photoUrl: isSet(object.photoUrl) ? globalThis.String(object.photoUrl) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },
 
   toJSON(message: GetUserResponse): unknown {
     const obj: any = {};
-    if (message.name !== "") {
-      obj.name = message.name;
+    if (message.firstName !== "") {
+      obj.firstName = message.firstName;
+    }
+    if (message.lastName !== "") {
+      obj.lastName = message.lastName;
     }
     if (message.email !== "") {
       obj.email = message.email;
+    }
+    if (message.photoUrl !== "") {
+      obj.photoUrl = message.photoUrl;
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
     }
     return obj;
   },
@@ -152,23 +200,35 @@ export const GetUserResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<GetUserResponse>, I>>(object: I): GetUserResponse {
     const message = createBaseGetUserResponse();
-    message.name = object.name ?? "";
+    message.firstName = object.firstName ?? "";
+    message.lastName = object.lastName ?? "";
     message.email = object.email ?? "";
+    message.photoUrl = object.photoUrl ?? "";
+    message.id = object.id ?? "";
     return message;
   },
 };
 
 function createBaseCreateUserRequest(): CreateUserRequest {
-  return { name: "", email: "" };
+  return { firstName: "", lastName: "", email: "", password: "", photoUrl: "" };
 }
 
 export const CreateUserRequest = {
   encode(message: CreateUserRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.name !== "") {
-      writer.uint32(10).string(message.name);
+    if (message.firstName !== "") {
+      writer.uint32(10).string(message.firstName);
+    }
+    if (message.lastName !== "") {
+      writer.uint32(18).string(message.lastName);
     }
     if (message.email !== "") {
-      writer.uint32(18).string(message.email);
+      writer.uint32(26).string(message.email);
+    }
+    if (message.password !== "") {
+      writer.uint32(34).string(message.password);
+    }
+    if (message.photoUrl !== "") {
+      writer.uint32(42).string(message.photoUrl);
     }
     return writer;
   },
@@ -185,14 +245,35 @@ export const CreateUserRequest = {
             break;
           }
 
-          message.name = reader.string();
+          message.firstName = reader.string();
           continue;
         case 2:
           if (tag !== 18) {
             break;
           }
 
+          message.lastName = reader.string();
+          continue;
+        case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.email = reader.string();
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.password = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
+            break;
+          }
+
+          message.photoUrl = reader.string();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -205,18 +286,30 @@ export const CreateUserRequest = {
 
   fromJSON(object: any): CreateUserRequest {
     return {
-      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      firstName: isSet(object.firstName) ? globalThis.String(object.firstName) : "",
+      lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : "",
       email: isSet(object.email) ? globalThis.String(object.email) : "",
+      password: isSet(object.password) ? globalThis.String(object.password) : "",
+      photoUrl: isSet(object.photoUrl) ? globalThis.String(object.photoUrl) : "",
     };
   },
 
   toJSON(message: CreateUserRequest): unknown {
     const obj: any = {};
-    if (message.name !== "") {
-      obj.name = message.name;
+    if (message.firstName !== "") {
+      obj.firstName = message.firstName;
+    }
+    if (message.lastName !== "") {
+      obj.lastName = message.lastName;
     }
     if (message.email !== "") {
       obj.email = message.email;
+    }
+    if (message.password !== "") {
+      obj.password = message.password;
+    }
+    if (message.photoUrl !== "") {
+      obj.photoUrl = message.photoUrl;
     }
     return obj;
   },
@@ -226,8 +319,11 @@ export const CreateUserRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<CreateUserRequest>, I>>(object: I): CreateUserRequest {
     const message = createBaseCreateUserRequest();
-    message.name = object.name ?? "";
+    message.firstName = object.firstName ?? "";
+    message.lastName = object.lastName ?? "";
     message.email = object.email ?? "";
+    message.password = object.password ?? "";
+    message.photoUrl = object.photoUrl ?? "";
     return message;
   },
 };
