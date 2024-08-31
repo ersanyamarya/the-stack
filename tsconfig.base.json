@@ -18,7 +18,8 @@
     "paths": {
       "@local/infra-types": ["infra/types/src/index.ts"],
       "@local/server-essentials": ["packages/server-essentials/src/index.ts"],
-      "@local/utils": ["packages/utils/src/index.ts"]
+      "@local/utils": ["packages/utils/src/index.ts"],
+      "proto": ["infra/proto/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

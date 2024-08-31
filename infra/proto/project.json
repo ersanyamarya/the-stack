@@ -1,0 +1,30 @@
+{
+  "name": "proto",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "infra/proto/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/infra/proto",
+        "main": "infra/proto/src/index.ts",
+        "tsConfig": "infra/proto/tsconfig.lib.json",
+        "assets": ["infra/proto/*.md"]
+      }
+    },
+    "generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          {
+            "command": "bash tools/scripts/generate-proto.sh"
+          }
+        ],
+        "parallel": false
+      }
+    }
+  }
+}
