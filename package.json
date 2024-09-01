@@ -21,11 +21,11 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@nx/esbuild": "19.5.7",
+    "@nx/esbuild": "19.6.4",
     "@nx/eslint": "19.5.7",
     "@nx/eslint-plugin": "19.5.7",
-    "@nx/js": "19.5.7",
-    "@nx/node": "^19.5.7",
+    "@nx/js": "19.6.4",
+    "@nx/node": "19.6.4",
     "@nx/vite": "19.5.7",
     "@nx/web": "19.5.7",
     "@swc-node/register": "~1.9.1",

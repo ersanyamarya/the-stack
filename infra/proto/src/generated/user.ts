@@ -6,6 +6,18 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
+import {
+  type CallOptions,
+  ChannelCredentials,
+  Client,
+  type ClientOptions,
+  type ClientUnaryCall,
+  type handleUnaryCall,
+  makeGenericClientConstructor,
+  Metadata,
+  type ServiceError,
+  type UntypedServiceImplementation,
+} from "@grpc/grpc-js";
 
 export const protobufPackage = "user";
 
@@ -385,37 +397,71 @@ export const CreateUserResponse = {
   },
 };
 
-export interface UserService {
-  GetUser(request: GetUserRequest): Promise<GetUserResponse>;
-  CreateUser(request: CreateUserRequest): Promise<CreateUserResponse>;
+export type UserServiceService = typeof UserServiceService;
+export const UserServiceService = {
+  getUser: {
+    path: "/user.UserService/GetUser",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: GetUserRequest) => Buffer.from(GetUserRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => GetUserRequest.decode(value),
+    responseSerialize: (value: GetUserResponse) => Buffer.from(GetUserResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => GetUserResponse.decode(value),
+  },
+  createUser: {
+    path: "/user.UserService/CreateUser",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: CreateUserRequest) => Buffer.from(CreateUserRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => CreateUserRequest.decode(value),
+    responseSerialize: (value: CreateUserResponse) => Buffer.from(CreateUserResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => CreateUserResponse.decode(value),
+  },
+} as const;
+
+export interface UserServiceServer extends UntypedServiceImplementation {
+  getUser: handleUnaryCall<GetUserRequest, GetUserResponse>;
+  createUser: handleUnaryCall<CreateUserRequest, CreateUserResponse>;
 }
 
-export const UserServiceServiceName = "user.UserService";
-export class UserServiceClientImpl implements UserService {
-  private readonly rpc: Rpc;
-  private readonly service: string;
-  constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || UserServiceServiceName;
-    this.rpc = rpc;
-    this.GetUser = this.GetUser.bind(this);
-    this.CreateUser = this.CreateUser.bind(this);
-  }
-  GetUser(request: GetUserRequest): Promise<GetUserResponse> {
-    const data = GetUserRequest.encode(request).finish();
-    const promise = this.rpc.request(this.service, "GetUser", data);
-    return promise.then((data) => GetUserResponse.decode(new BinaryReader(data)));
-  }
-
-  CreateUser(request: CreateUserRequest): Promise<CreateUserResponse> {
-    const data = CreateUserRequest.encode(request).finish();
-    const promise = this.rpc.request(this.service, "CreateUser", data);
-    return promise.then((data) => CreateUserResponse.decode(new BinaryReader(data)));
-  }
+export interface UserServiceClient extends Client {
+  getUser(
+    request: GetUserRequest,
+    callback: (error: ServiceError | null, response: GetUserResponse) => void,
+  ): ClientUnaryCall;
+  getUser(
+    request: GetUserRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetUserResponse) => void,
+  ): ClientUnaryCall;
+  getUser(
+    request: GetUserRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetUserResponse) => void,
+  ): ClientUnaryCall;
+  createUser(
+    request: CreateUserRequest,
+    callback: (error: ServiceError | null, response: CreateUserResponse) => void,
+  ): ClientUnaryCall;
+  createUser(
+    request: CreateUserRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: CreateUserResponse) => void,
+  ): ClientUnaryCall;
+  createUser(
+    request: CreateUserRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: CreateUserResponse) => void,
+  ): ClientUnaryCall;
 }
 
-interface Rpc {
-  request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
-}
+export const UserServiceClient = makeGenericClientConstructor(UserServiceService, "user.UserService") as unknown as {
+  new (address: string, credentials: ChannelCredentials, options?: Partial<ClientOptions>): UserServiceClient;
+  service: typeof UserServiceService;
+  serviceName: string;
+};
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
