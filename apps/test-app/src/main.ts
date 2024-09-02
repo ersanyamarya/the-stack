@@ -1,9 +1,11 @@
+import { credentials } from '@grpc/grpc-js';
 import Router from '@koa/router';
 import { HealthCheck, isAppError, Logger, Plugin } from '@local/infra-types';
 import { ErrorCallback, getKoaServer, isRequestValidationError, setupRootRoute } from '@local/server-essentials';
 import { exceptions, gracefulShutdown } from '@local/utils';
 import httpStatusCodes from 'http-status-codes';
 import { config, getConfig } from './config';
+const PRODUCT_SERVICE_URL = process.env.USER_SERVICE_URL || '0.0.0.0:50051';
 
 // green color for info, yellow for warn, red for error, and blue for debug
 const ConsoleTextColorLogger: Logger = {
@@ -13,6 +15,7 @@ const ConsoleTextColorLogger: Logger = {
   debug: (...optionalParams: unknown[]) => console.log('\x1b[34m', '🐛 ', ...optionalParams, '\x1b[0m'),
 };
 
+import { UserServiceClient } from '@local/proto';
 import controllers from './controllers';
 const errorCallback: ErrorCallback = (error, ctx) => {
   if (isRequestValidationError(error)) {
@@ -111,6 +114,16 @@ async function main() {
       localLogger.error(error.message);
       process.exit(1);
     });
+
+  const client = new UserServiceClient(PRODUCT_SERVICE_URL, credentials.createInsecure());
+
+  client.listUsers({}, (error, response) => {
+    if (error) {
+      localLogger.error(error.message);
+      process.exit(1);
+    }
+    localLogger.info(response.users);
+  });
 
   gracefulShutdown(localLogger, onShutdown, server);
 }

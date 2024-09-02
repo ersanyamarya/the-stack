@@ -1,5 +1,14 @@
 import { sendUnaryData, Server, ServerCredentials, ServerUnaryCall, status } from '@grpc/grpc-js';
-import { CreateUserRequest, CreateUserResponse, GetUserRequest, GetUserResponse, UserServiceServer, UserServiceService } from '@local/proto';
+import {
+  CreateUserRequest,
+  CreateUserResponse,
+  GetUserRequest,
+  GetUserResponse,
+  ListUsersRequest,
+  ListUsersResponse,
+  UserServiceServer,
+  UserServiceService,
+} from '@local/proto';
 export interface LocalUser {
   firstName: string;
   lastName: string;
@@ -23,7 +32,7 @@ const users: LocalUser[] = [
 const server = new Server();
 
 const HOST = process.env.HOST || '0.0.0.0';
-const PORT = Number(process.env.PORT) || 3000;
+const PORT = Number(process.env.PORT) || 50051;
 
 const address = `${HOST}:${PORT}`;
 
@@ -50,6 +59,11 @@ function userServiceServer(): UserServiceServer {
           callback({ code: status.INTERNAL }, null);
         }
       }
+    },
+    listUsers: (call: ServerUnaryCall<ListUsersRequest, ListUsersResponse>, callback: sendUnaryData<ListUsersResponse>) => {
+      const usersPB = users.map(user => GetUserResponse.fromJSON(user));
+      const response: ListUsersResponse = { users: usersPB };
+      callback(null, response);
     },
   };
 }

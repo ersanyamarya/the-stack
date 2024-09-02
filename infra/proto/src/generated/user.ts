@@ -21,6 +21,13 @@ import {
 
 export const protobufPackage = "user";
 
+export interface ListUsersRequest {
+}
+
+export interface ListUsersResponse {
+  users: GetUserResponse[];
+}
+
 export interface GetUserRequest {
   id: string;
 }
@@ -44,6 +51,108 @@ export interface CreateUserRequest {
 export interface CreateUserResponse {
   id: string;
 }
+
+function createBaseListUsersRequest(): ListUsersRequest {
+  return {};
+}
+
+export const ListUsersRequest = {
+  encode(_: ListUsersRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ListUsersRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListUsersRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(_: any): ListUsersRequest {
+    return {};
+  },
+
+  toJSON(_: ListUsersRequest): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListUsersRequest>, I>>(base?: I): ListUsersRequest {
+    return ListUsersRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListUsersRequest>, I>>(_: I): ListUsersRequest {
+    const message = createBaseListUsersRequest();
+    return message;
+  },
+};
+
+function createBaseListUsersResponse(): ListUsersResponse {
+  return { users: [] };
+}
+
+export const ListUsersResponse = {
+  encode(message: ListUsersResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    for (const v of message.users) {
+      GetUserResponse.encode(v!, writer.uint32(10).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): ListUsersResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseListUsersResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.users.push(GetUserResponse.decode(reader, reader.uint32()));
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): ListUsersResponse {
+    return {
+      users: globalThis.Array.isArray(object?.users) ? object.users.map((e: any) => GetUserResponse.fromJSON(e)) : [],
+    };
+  },
+
+  toJSON(message: ListUsersResponse): unknown {
+    const obj: any = {};
+    if (message.users?.length) {
+      obj.users = message.users.map((e) => GetUserResponse.toJSON(e));
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ListUsersResponse>, I>>(base?: I): ListUsersResponse {
+    return ListUsersResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<ListUsersResponse>, I>>(object: I): ListUsersResponse {
+    const message = createBaseListUsersResponse();
+    message.users = object.users?.map((e) => GetUserResponse.fromPartial(e)) || [];
+    return message;
+  },
+};
 
 function createBaseGetUserRequest(): GetUserRequest {
   return { id: "" };
@@ -417,11 +526,23 @@ export const UserServiceService = {
     responseSerialize: (value: CreateUserResponse) => Buffer.from(CreateUserResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer) => CreateUserResponse.decode(value),
   },
+  /** List of users and return a list of GetUserResponse */
+  listUsers: {
+    path: "/user.UserService/ListUsers",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: ListUsersRequest) => Buffer.from(ListUsersRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => ListUsersRequest.decode(value),
+    responseSerialize: (value: ListUsersResponse) => Buffer.from(ListUsersResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => ListUsersResponse.decode(value),
+  },
 } as const;
 
 export interface UserServiceServer extends UntypedServiceImplementation {
   getUser: handleUnaryCall<GetUserRequest, GetUserResponse>;
   createUser: handleUnaryCall<CreateUserRequest, CreateUserResponse>;
+  /** List of users and return a list of GetUserResponse */
+  listUsers: handleUnaryCall<ListUsersRequest, ListUsersResponse>;
 }
 
 export interface UserServiceClient extends Client {
@@ -454,6 +575,22 @@ export interface UserServiceClient extends Client {
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: CreateUserResponse) => void,
+  ): ClientUnaryCall;
+  /** List of users and return a list of GetUserResponse */
+  listUsers(
+    request: ListUsersRequest,
+    callback: (error: ServiceError | null, response: ListUsersResponse) => void,
+  ): ClientUnaryCall;
+  listUsers(
+    request: ListUsersRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: ListUsersResponse) => void,
+  ): ClientUnaryCall;
+  listUsers(
+    request: ListUsersRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: ListUsersResponse) => void,
   ): ClientUnaryCall;
 }
 
