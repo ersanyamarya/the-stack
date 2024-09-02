@@ -5,13 +5,11 @@ package user;
 service UserService {
   rpc GetUser(GetUserRequest) returns (GetUserResponse);
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
-// List of users and return a list of GetUserResponse
-    rpc ListUsers(ListUsersRequest) returns ( ListUsersResponse);
+  rpc ListUsers(ListUsersRequest) returns ( ListUsersResponse);
 }
 
 
 message ListUsersRequest {
-
 }
 
 message ListUsersResponse {
