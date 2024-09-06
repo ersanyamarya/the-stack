@@ -9,25 +9,8 @@ import {
   UserServiceServer,
   UserServiceService,
 } from '@local/proto';
-export interface LocalUser {
-  firstName: string;
-  lastName: string;
-  email: string;
-  photoUrl: string;
-  password: string;
-  id: string;
-}
-
-const users: LocalUser[] = [
-  {
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe.example.com',
-    photoUrl: 'https://example.com/john-doe.jpg',
-    password: 'password',
-    id: '1',
-  },
-];
+import { localUserUseCase } from './localUserUseCase';
+import { User, UserRepository } from './repository';
 
 const server = new Server();
 
@@ -36,10 +19,10 @@ const PORT = Number(process.env.PORT) || 50051;
 
 const address = `${HOST}:${PORT}`;
 
-function userServiceServer(): UserServiceServer {
+function userServiceServer(userRepository: UserRepository): UserServiceServer {
   return {
-    getUser: (call: ServerUnaryCall<GetUserRequest, GetUserResponse>, callback: sendUnaryData<GetUserResponse>) => {
-      const user = users.find(u => u.id === call.request.id);
+    getUser: async (call: ServerUnaryCall<GetUserRequest, GetUserResponse>, callback: sendUnaryData<GetUserResponse>) => {
+      const user = await userRepository.getUser(call.request.id);
       if (user) {
         const userPB = GetUserResponse.fromJSON(user);
         const response: GetUserResponse = userPB;
@@ -48,11 +31,11 @@ function userServiceServer(): UserServiceServer {
         callback({ code: status.INTERNAL }, null);
       }
     },
-    createUser: (call: ServerUnaryCall<CreateUserRequest, CreateUserResponse>, callback: sendUnaryData<CreateUserResponse>) => {
+    createUser: async (call: ServerUnaryCall<CreateUserRequest, CreateUserResponse>, callback: sendUnaryData<CreateUserResponse>) => {
       {
         try {
-          const user = CreateUserRequest.toJSON(call.request) as LocalUser;
-          users.push(user);
+          const user = CreateUserRequest.toJSON(call.request) as User;
+          await userRepository.createUser(user);
           const response: CreateUserResponse = { id: user.id };
           callback(null, response);
         } catch (error) {
@@ -60,15 +43,15 @@ function userServiceServer(): UserServiceServer {
         }
       }
     },
-    listUsers: (call: ServerUnaryCall<ListUsersRequest, ListUsersResponse>, callback: sendUnaryData<ListUsersResponse>) => {
-      const usersPB = users.map(user => GetUserResponse.fromJSON(user));
+    listUsers: async (call: ServerUnaryCall<ListUsersRequest, ListUsersResponse>, callback: sendUnaryData<ListUsersResponse>) => {
+      const usersPB = await userRepository.listUsers().then(users => users.map(user => GetUserResponse.fromJSON(user)));
       const response: ListUsersResponse = { users: usersPB };
       callback(null, response);
     },
   };
 }
 
-server.addService(UserServiceService, userServiceServer());
+server.addService(UserServiceService, userServiceServer(localUserUseCase()));
 
 server.bindAsync(address, ServerCredentials.createInsecure(), (err, port) => {
   if (err) {

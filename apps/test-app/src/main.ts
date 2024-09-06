@@ -117,6 +117,23 @@ async function main() {
 
   const client = new UserServiceClient(PRODUCT_SERVICE_URL, credentials.createInsecure());
 
+  client.createUser(
+    {
+      firstName: 'Jane',
+      lastName: 'Doe',
+      email: 'jane.doe.example.com',
+      photoUrl: 'https://example.com/jane-doe.jpg',
+      password: 'password',
+    },
+    (error, response) => {
+      if (error) {
+        localLogger.error(error.message);
+        process.exit(1);
+      }
+      localLogger.info(response);
+    }
+  );
+
   client.listUsers({}, (error, response) => {
     if (error) {
       localLogger.error(error.message);
