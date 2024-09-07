@@ -1,14 +1,19 @@
 {
   "name": "the-stack",
   "version": "0.0.0",
+  "private": true,
   "license": "MIT",
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "infra/*"
+  ],
   "scripts": {
-    "format": "prettier --write \"**/*.{ts,js,json,md,tsx,jsx}\"",
     "clean": "nx run-many --target=clean --all --parallel && nx reset && rm -rf dist coverage tmp",
+    "format": "prettier --write \"**/*.{ts,js,json,md,tsx,jsx}\"",
     "lint": "nx run-many --target=lint --all --parallel",
     "lint:fix": "nx run-many --target=lint --fix --all --parallel"
   },
-  "private": true,
   "dependencies": {
     "@grpc/grpc-js": "^1.11.1",
     "@koa/bodyparser": "^5.1.1",
@@ -55,8 +60,5 @@
     "vite": "^5.0.0",
     "vite-plugin-dts": "~3.8.1",
     "vitest": "^1.3.1"
-  },
-  "workspaces": [
-    "packages/*"
-  ]
+  }
 }
