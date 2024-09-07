@@ -5,7 +5,7 @@
 // source: user.proto
 
 /* eslint-disable */
-import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
+import { BinaryReader, BinaryWriter } from '@bufbuild/protobuf/wire';
 import {
   type CallOptions,
   ChannelCredentials,
@@ -17,12 +17,11 @@ import {
   Metadata,
   type ServiceError,
   type UntypedServiceImplementation,
-} from "@grpc/grpc-js";
+} from '@grpc/grpc-js';
 
-export const protobufPackage = "user";
+export const protobufPackage = 'user';
 
-export interface ListUsersRequest {
-}
+export interface ListUsersRequest {}
 
 export interface ListUsersResponse {
   users: GetUserResponse[];
@@ -139,7 +138,7 @@ export const ListUsersResponse = {
   toJSON(message: ListUsersResponse): unknown {
     const obj: any = {};
     if (message.users?.length) {
-      obj.users = message.users.map((e) => GetUserResponse.toJSON(e));
+      obj.users = message.users.map(e => GetUserResponse.toJSON(e));
     }
     return obj;
   },
@@ -149,18 +148,18 @@ export const ListUsersResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<ListUsersResponse>, I>>(object: I): ListUsersResponse {
     const message = createBaseListUsersResponse();
-    message.users = object.users?.map((e) => GetUserResponse.fromPartial(e)) || [];
+    message.users = object.users?.map(e => GetUserResponse.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseGetUserRequest(): GetUserRequest {
-  return { id: "" };
+  return { id: '' };
 }
 
 export const GetUserRequest = {
   encode(message: GetUserRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.id !== "") {
+    if (message.id !== '') {
       writer.uint32(10).string(message.id);
     }
     return writer;
@@ -190,12 +189,12 @@ export const GetUserRequest = {
   },
 
   fromJSON(object: any): GetUserRequest {
-    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
+    return { id: isSet(object.id) ? globalThis.String(object.id) : '' };
   },
 
   toJSON(message: GetUserRequest): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== '') {
       obj.id = message.id;
     }
     return obj;
@@ -206,30 +205,30 @@ export const GetUserRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<GetUserRequest>, I>>(object: I): GetUserRequest {
     const message = createBaseGetUserRequest();
-    message.id = object.id ?? "";
+    message.id = object.id ?? '';
     return message;
   },
 };
 
 function createBaseGetUserResponse(): GetUserResponse {
-  return { firstName: "", lastName: "", email: "", photoUrl: "", id: "" };
+  return { firstName: '', lastName: '', email: '', photoUrl: '', id: '' };
 }
 
 export const GetUserResponse = {
   encode(message: GetUserResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.firstName !== "") {
+    if (message.firstName !== '') {
       writer.uint32(10).string(message.firstName);
     }
-    if (message.lastName !== "") {
+    if (message.lastName !== '') {
       writer.uint32(18).string(message.lastName);
     }
-    if (message.email !== "") {
+    if (message.email !== '') {
       writer.uint32(26).string(message.email);
     }
-    if (message.photoUrl !== "") {
+    if (message.photoUrl !== '') {
       writer.uint32(34).string(message.photoUrl);
     }
-    if (message.id !== "") {
+    if (message.id !== '') {
       writer.uint32(42).string(message.id);
     }
     return writer;
@@ -288,29 +287,29 @@ export const GetUserResponse = {
 
   fromJSON(object: any): GetUserResponse {
     return {
-      firstName: isSet(object.firstName) ? globalThis.String(object.firstName) : "",
-      lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : "",
-      email: isSet(object.email) ? globalThis.String(object.email) : "",
-      photoUrl: isSet(object.photoUrl) ? globalThis.String(object.photoUrl) : "",
-      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      firstName: isSet(object.firstName) ? globalThis.String(object.firstName) : '',
+      lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : '',
+      email: isSet(object.email) ? globalThis.String(object.email) : '',
+      photoUrl: isSet(object.photoUrl) ? globalThis.String(object.photoUrl) : '',
+      id: isSet(object.id) ? globalThis.String(object.id) : '',
     };
   },
 
   toJSON(message: GetUserResponse): unknown {
     const obj: any = {};
-    if (message.firstName !== "") {
+    if (message.firstName !== '') {
       obj.firstName = message.firstName;
     }
-    if (message.lastName !== "") {
+    if (message.lastName !== '') {
       obj.lastName = message.lastName;
     }
-    if (message.email !== "") {
+    if (message.email !== '') {
       obj.email = message.email;
     }
-    if (message.photoUrl !== "") {
+    if (message.photoUrl !== '') {
       obj.photoUrl = message.photoUrl;
     }
-    if (message.id !== "") {
+    if (message.id !== '') {
       obj.id = message.id;
     }
     return obj;
@@ -321,34 +320,34 @@ export const GetUserResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<GetUserResponse>, I>>(object: I): GetUserResponse {
     const message = createBaseGetUserResponse();
-    message.firstName = object.firstName ?? "";
-    message.lastName = object.lastName ?? "";
-    message.email = object.email ?? "";
-    message.photoUrl = object.photoUrl ?? "";
-    message.id = object.id ?? "";
+    message.firstName = object.firstName ?? '';
+    message.lastName = object.lastName ?? '';
+    message.email = object.email ?? '';
+    message.photoUrl = object.photoUrl ?? '';
+    message.id = object.id ?? '';
     return message;
   },
 };
 
 function createBaseCreateUserRequest(): CreateUserRequest {
-  return { firstName: "", lastName: "", email: "", password: "", photoUrl: "" };
+  return { firstName: '', lastName: '', email: '', password: '', photoUrl: '' };
 }
 
 export const CreateUserRequest = {
   encode(message: CreateUserRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.firstName !== "") {
+    if (message.firstName !== '') {
       writer.uint32(10).string(message.firstName);
     }
-    if (message.lastName !== "") {
+    if (message.lastName !== '') {
       writer.uint32(18).string(message.lastName);
     }
-    if (message.email !== "") {
+    if (message.email !== '') {
       writer.uint32(26).string(message.email);
     }
-    if (message.password !== "") {
+    if (message.password !== '') {
       writer.uint32(34).string(message.password);
     }
-    if (message.photoUrl !== "") {
+    if (message.photoUrl !== '') {
       writer.uint32(42).string(message.photoUrl);
     }
     return writer;
@@ -407,29 +406,29 @@ export const CreateUserRequest = {
 
   fromJSON(object: any): CreateUserRequest {
     return {
-      firstName: isSet(object.firstName) ? globalThis.String(object.firstName) : "",
-      lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : "",
-      email: isSet(object.email) ? globalThis.String(object.email) : "",
-      password: isSet(object.password) ? globalThis.String(object.password) : "",
-      photoUrl: isSet(object.photoUrl) ? globalThis.String(object.photoUrl) : "",
+      firstName: isSet(object.firstName) ? globalThis.String(object.firstName) : '',
+      lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : '',
+      email: isSet(object.email) ? globalThis.String(object.email) : '',
+      password: isSet(object.password) ? globalThis.String(object.password) : '',
+      photoUrl: isSet(object.photoUrl) ? globalThis.String(object.photoUrl) : '',
     };
   },
 
   toJSON(message: CreateUserRequest): unknown {
     const obj: any = {};
-    if (message.firstName !== "") {
+    if (message.firstName !== '') {
       obj.firstName = message.firstName;
     }
-    if (message.lastName !== "") {
+    if (message.lastName !== '') {
       obj.lastName = message.lastName;
     }
-    if (message.email !== "") {
+    if (message.email !== '') {
       obj.email = message.email;
     }
-    if (message.password !== "") {
+    if (message.password !== '') {
       obj.password = message.password;
     }
-    if (message.photoUrl !== "") {
+    if (message.photoUrl !== '') {
       obj.photoUrl = message.photoUrl;
     }
     return obj;
@@ -440,22 +439,22 @@ export const CreateUserRequest = {
   },
   fromPartial<I extends Exact<DeepPartial<CreateUserRequest>, I>>(object: I): CreateUserRequest {
     const message = createBaseCreateUserRequest();
-    message.firstName = object.firstName ?? "";
-    message.lastName = object.lastName ?? "";
-    message.email = object.email ?? "";
-    message.password = object.password ?? "";
-    message.photoUrl = object.photoUrl ?? "";
+    message.firstName = object.firstName ?? '';
+    message.lastName = object.lastName ?? '';
+    message.email = object.email ?? '';
+    message.password = object.password ?? '';
+    message.photoUrl = object.photoUrl ?? '';
     return message;
   },
 };
 
 function createBaseCreateUserResponse(): CreateUserResponse {
-  return { id: "" };
+  return { id: '' };
 }
 
 export const CreateUserResponse = {
   encode(message: CreateUserResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.id !== "") {
+    if (message.id !== '') {
       writer.uint32(10).string(message.id);
     }
     return writer;
@@ -485,12 +484,12 @@ export const CreateUserResponse = {
   },
 
   fromJSON(object: any): CreateUserResponse {
-    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
+    return { id: isSet(object.id) ? globalThis.String(object.id) : '' };
   },
 
   toJSON(message: CreateUserResponse): unknown {
     const obj: any = {};
-    if (message.id !== "") {
+    if (message.id !== '') {
       obj.id = message.id;
     }
     return obj;
@@ -501,7 +500,7 @@ export const CreateUserResponse = {
   },
   fromPartial<I extends Exact<DeepPartial<CreateUserResponse>, I>>(object: I): CreateUserResponse {
     const message = createBaseCreateUserResponse();
-    message.id = object.id ?? "";
+    message.id = object.id ?? '';
     return message;
   },
 };
@@ -509,7 +508,7 @@ export const CreateUserResponse = {
 export type UserServiceService = typeof UserServiceService;
 export const UserServiceService = {
   getUser: {
-    path: "/user.UserService/GetUser",
+    path: '/user.UserService/GetUser',
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: GetUserRequest) => Buffer.from(GetUserRequest.encode(value).finish()),
@@ -518,7 +517,7 @@ export const UserServiceService = {
     responseDeserialize: (value: Buffer) => GetUserResponse.decode(value),
   },
   createUser: {
-    path: "/user.UserService/CreateUser",
+    path: '/user.UserService/CreateUser',
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: CreateUserRequest) => Buffer.from(CreateUserRequest.encode(value).finish()),
@@ -528,7 +527,7 @@ export const UserServiceService = {
   },
   /** List of users and return a list of GetUserResponse */
   listUsers: {
-    path: "/user.UserService/ListUsers",
+    path: '/user.UserService/ListUsers',
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: ListUsersRequest) => Buffer.from(ListUsersRequest.encode(value).finish()),
@@ -546,55 +545,34 @@ export interface UserServiceServer extends UntypedServiceImplementation {
 }
 
 export interface UserServiceClient extends Client {
-  getUser(
-    request: GetUserRequest,
-    callback: (error: ServiceError | null, response: GetUserResponse) => void,
-  ): ClientUnaryCall;
-  getUser(
-    request: GetUserRequest,
-    metadata: Metadata,
-    callback: (error: ServiceError | null, response: GetUserResponse) => void,
-  ): ClientUnaryCall;
+  getUser(request: GetUserRequest, callback: (error: ServiceError | null, response: GetUserResponse) => void): ClientUnaryCall;
+  getUser(request: GetUserRequest, metadata: Metadata, callback: (error: ServiceError | null, response: GetUserResponse) => void): ClientUnaryCall;
   getUser(
     request: GetUserRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: GetUserResponse) => void,
+    callback: (error: ServiceError | null, response: GetUserResponse) => void
   ): ClientUnaryCall;
-  createUser(
-    request: CreateUserRequest,
-    callback: (error: ServiceError | null, response: CreateUserResponse) => void,
-  ): ClientUnaryCall;
-  createUser(
-    request: CreateUserRequest,
-    metadata: Metadata,
-    callback: (error: ServiceError | null, response: CreateUserResponse) => void,
-  ): ClientUnaryCall;
+  createUser(request: CreateUserRequest, callback: (error: ServiceError | null, response: CreateUserResponse) => void): ClientUnaryCall;
+  createUser(request: CreateUserRequest, metadata: Metadata, callback: (error: ServiceError | null, response: CreateUserResponse) => void): ClientUnaryCall;
   createUser(
     request: CreateUserRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: CreateUserResponse) => void,
+    callback: (error: ServiceError | null, response: CreateUserResponse) => void
   ): ClientUnaryCall;
   /** List of users and return a list of GetUserResponse */
-  listUsers(
-    request: ListUsersRequest,
-    callback: (error: ServiceError | null, response: ListUsersResponse) => void,
-  ): ClientUnaryCall;
-  listUsers(
-    request: ListUsersRequest,
-    metadata: Metadata,
-    callback: (error: ServiceError | null, response: ListUsersResponse) => void,
-  ): ClientUnaryCall;
+  listUsers(request: ListUsersRequest, callback: (error: ServiceError | null, response: ListUsersResponse) => void): ClientUnaryCall;
+  listUsers(request: ListUsersRequest, metadata: Metadata, callback: (error: ServiceError | null, response: ListUsersResponse) => void): ClientUnaryCall;
   listUsers(
     request: ListUsersRequest,
     metadata: Metadata,
     options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: ListUsersResponse) => void,
+    callback: (error: ServiceError | null, response: ListUsersResponse) => void
   ): ClientUnaryCall;
 }
 
-export const UserServiceClient = makeGenericClientConstructor(UserServiceService, "user.UserService") as unknown as {
+export const UserServiceClient = makeGenericClientConstructor(UserServiceService, 'user.UserService') as unknown as {
   new (address: string, credentials: ChannelCredentials, options?: Partial<ClientOptions>): UserServiceClient;
   service: typeof UserServiceService;
   serviceName: string;
@@ -602,15 +580,18 @@ export const UserServiceClient = makeGenericClientConstructor(UserServiceService
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+export type Exact<P, I extends P> = P extends Builtin ? P : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

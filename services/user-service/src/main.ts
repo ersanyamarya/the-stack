@@ -58,5 +58,6 @@ server.bindAsync(address, ServerCredentials.createInsecure(), (err, port) => {
     console.error(err);
     process.exit(1);
   }
+  console.log(`Server bound on port ${port}`);
   console.log(`Server listening on ${address}`);
 });
