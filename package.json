@@ -12,7 +12,8 @@
     "clean": "nx run-many --target=clean --all --parallel && nx reset && rm -rf dist coverage tmp",
     "format": "prettier --write \"**/*.{ts,js,json,md,tsx,jsx}\"",
     "lint": "nx run-many --target=lint --all --parallel",
-    "lint:fix": "nx run-many --target=lint --fix --all --parallel"
+    "lint:fix": "nx run-many --target=lint --fix --all --parallel",
+    "test": "nx run-many --target=test --all --parallel"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.11.1",
@@ -26,13 +27,13 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@nx/esbuild": "19.6.4",
-    "@nx/eslint": "19.5.7",
-    "@nx/eslint-plugin": "19.5.7",
-    "@nx/js": "19.6.4",
-    "@nx/node": "19.6.4",
-    "@nx/vite": "19.5.7",
-    "@nx/web": "19.5.7",
+    "@nx/esbuild": "19.6.5",
+    "@nx/eslint": "19.6.5",
+    "@nx/eslint-plugin": "19.6.5",
+    "@nx/js": "19.6.5",
+    "@nx/node": "19.6.5",
+    "@nx/vite": "19.6.5",
+    "@nx/web": "19.6.5",
     "@swc-node/register": "~1.9.1",
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
@@ -51,7 +52,7 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-security": "^3.0.1",
     "grpc-tools": "^1.12.4",
-    "nx": "19.5.7",
+    "nx": "19.6.5",
     "prettier": "^2.6.2",
     "prettier-plugin-organize-imports": "^4.0.0",
     "supertest": "^7.0.0",
