@@ -18,8 +18,8 @@
     "paths": {
       "@local/infra-types": ["infra/types/src/index.ts"],
       "@local/proto": ["infra/proto/src/index.ts"],
-      "@local/server-essentials": ["packages/server-essentials/src/index.ts"],
-      "@local/utils": ["packages/utils/src/index.ts"]
+      "@local/utils": ["packages/utils/src/index.ts"],
+      "koa-server-essentials": ["packages/koa-server-essentials/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

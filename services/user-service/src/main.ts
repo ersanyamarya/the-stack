@@ -1,4 +1,5 @@
 import { sendUnaryData, Server, ServerCredentials, ServerUnaryCall, status } from '@grpc/grpc-js';
+import { Logger } from '@local/infra-types';
 import {
   CreateUserRequest,
   CreateUserResponse,
@@ -13,7 +14,12 @@ import { localUserUseCase } from './localUserUseCase';
 import { User, UserRepository } from './repository';
 
 const server = new Server();
-
+const ConsoleTextColorLogger: Logger = {
+  info: (...optionalParams: unknown[]) => console.log('\x1b[32m', 'ℹ️ ', ...optionalParams, '\x1b[0m'),
+  warn: (...optionalParams: unknown[]) => console.log('\x1b[33m', '⚠️ ', ...optionalParams, '\x1b[0m'),
+  error: (...optionalParams: unknown[]) => console.log('\x1b[31m', '❌ ', ...optionalParams, '\x1b[0m'),
+  debug: (...optionalParams: unknown[]) => console.log('\x1b[34m', '🐛 ', ...optionalParams, '\x1b[0m'),
+};
 const HOST = process.env.HOST || '0.0.0.0';
 const PORT = Number(process.env.PORT) || 50051;
 
@@ -55,9 +61,9 @@ server.addService(UserServiceService, userServiceServer(localUserUseCase()));
 
 server.bindAsync(address, ServerCredentials.createInsecure(), (err, port) => {
   if (err) {
-    console.error(err);
+    ConsoleTextColorLogger.error(err);
     process.exit(1);
   }
-  console.log(`Server bound on port ${port}`);
-  console.log(`Server listening on ${address}`);
+  ConsoleTextColorLogger.info(`Server bound on port ${port}`);
+  ConsoleTextColorLogger.info(`Server listening on ${address}`);
 });

@@ -1,5 +1,5 @@
 {
-  "name": "server-essentials",
+  "name": "koa-server-essentials",
   "version": "0.0.1",
   "private": true,
   "main": "./index.js",

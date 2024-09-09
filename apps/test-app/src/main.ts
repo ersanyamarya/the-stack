@@ -1,9 +1,9 @@
 import { credentials } from '@grpc/grpc-js';
 import Router from '@koa/router';
 import { HealthCheck, isAppError, Logger, Plugin } from '@local/infra-types';
-import { ErrorCallback, getKoaServer, isRequestValidationError, setupRootRoute } from '@local/server-essentials';
 import { exceptions, gracefulShutdown } from '@local/utils';
 import httpStatusCodes from 'http-status-codes';
+import { ErrorCallback, getKoaServer, isRequestValidationError, setupRootRoute } from 'koa-server-essentials';
 import { config, getConfig } from './config';
 const PRODUCT_SERVICE_URL = process.env.USER_SERVICE_URL || '0.0.0.0:50051';
 

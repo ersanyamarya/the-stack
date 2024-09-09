@@ -1,5 +1,5 @@
 import { AppError } from '@local/infra-types';
-import { Controller, koaCallback } from '@local/server-essentials';
+import { Controller, koaCallback } from 'koa-server-essentials';
 import { z, infer as ZodInfer } from 'zod';
 
 // Define Zod schemas
